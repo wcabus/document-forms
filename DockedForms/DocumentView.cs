@@ -5,39 +5,20 @@ namespace DocumentForms
     /// <summary>
     /// This class implements the basic behavior of a document view Form.
     /// </summary>
-    public abstract class DocumentView : Form, IDocumentView
+    public class DocumentView : Form, IDocumentView
     {
         private FormBorderStyle _originalBorderStyle;
-        private DocumentPanel _documentPanel;
 
-        protected DocumentView()
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public DocumentView()
         {
             _originalBorderStyle = base.FormBorderStyle;
         }
 
         public bool IsDocked { get; set; }
-
-        public DocumentPanel ParentDocumentPanel
-        {
-            get { return _documentPanel; }
-            set { _documentPanel = value; }
-        }
-
-        private void SetDocked(bool bDocked)
-        {
-            if (bDocked)
-            {
-                base.FormBorderStyle = FormBorderStyle.None;
-                Dock = DockStyle.Fill;
-            }
-            else
-            {
-                base.FormBorderStyle = _originalBorderStyle;
-                Dock = DockStyle.None;
-            }
-            TopLevel = !bDocked;
-            IsDocked = bDocked;
-        }
+        public DocumentPanel ParentDocumentPanel { get; set; }
 
         /// <summary>
         /// Gets or sets the border style of the Form.

@@ -70,8 +70,12 @@ namespace DocumentForms
 
             //Set Form-specific properties to let it become a window again.
             Form docForm = (documentView as Form);
-            docForm.FormBorderStyle = documentView.WindowBorderStyle;
-            docForm.TopLevel = true; //set this as last, Dock must be DockStyle.None when setting this property to true.
+            if (docForm != null)
+            {
+                docForm.FormBorderStyle = documentView.WindowBorderStyle;
+                docForm.TopLevel = true;
+                    //set this as last, Dock must be DockStyle.None when setting this property to true.
+            }
         }
 
         /// <summary>
@@ -93,16 +97,20 @@ namespace DocumentForms
 
             //Set Form-specific properties to let it become a window again.
             Form docForm = (documentView as Form);
-            docForm.FormBorderStyle = documentView.WindowBorderStyle;
-            docForm.TopLevel = true; //set this as last, Dock must be DockStyle.None when setting this property to true.
+            if (docForm != null)
+            {
+                docForm.FormBorderStyle = documentView.WindowBorderStyle;
+                docForm.TopLevel = true;
+                    //set this as last, Dock must be DockStyle.None when setting this property to true.
 
-            var position = Cursor.Position;
-            position.Offset(-30, -10); //otherwhise, we'd be holding the top-left corner of the form
+                var position = Cursor.Position;
+                position.Offset(-30, -10); //otherwhise, we'd be holding the top-left corner of the form
 
-            docForm.Location = position;
+                docForm.Location = position;
 
-            ReleaseCapture();
-            SendMessage(docForm.Handle, WmNcLButtonDown, HtCaption, 0);
+                ReleaseCapture();
+                SendMessage(docForm.Handle, WmNcLButtonDown, HtCaption, 0);
+            }
         }
     }
 }
