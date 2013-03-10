@@ -17,21 +17,25 @@ namespace DocumentForms.Sample
             InitializeComponent();
 
             ChildForm cf = new ChildForm();
+            DocumentViewHelper.RegisterView(documentPanel1, cf);
             DocumentViewHelper.Dock(documentPanel1, cf);
 
             ChildForm2 cf2 = new ChildForm2();
+            DocumentViewHelper.RegisterView(documentPanel1, cf2);
             DocumentViewHelper.Dock(documentPanel1, cf2);
         }
 
         private void child1ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChildForm cf = new ChildForm();
+            DocumentViewHelper.RegisterView(documentPanel1, cf);
             DocumentViewHelper.Dock(documentPanel1, cf);
         }
 
         private void child2ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChildForm2 cf2 = new ChildForm2();
+            DocumentViewHelper.RegisterView(documentPanel1, cf2);
             DocumentViewHelper.Dock(documentPanel1, cf2);
         }
 

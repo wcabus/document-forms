@@ -17,7 +17,7 @@ namespace DocumentForms
         private static extern IntPtr SendMessage(IntPtr hWnd, UInt32 msg, Int32 wParam, Int32 lParam);
         
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern IntPtr ReleaseCapture();
+        internal static extern IntPtr ReleaseCapture();
 
         /// <summary>
         /// Docks the <paramref name="documentView"/> inside the <paramref name="documentPanel"/>.
@@ -27,7 +27,7 @@ namespace DocumentForms
         /// <param name="documentPanel"></param>
         /// <param name="documentView"></param>
         /// <exception cref="ArgumentNullException">Thrown if either <paramref name="documentPanel"/> or <paramref name="documentView"/> is a null reference.</exception>
-        public static void Dock<TView>(DocumentPanel documentPanel, TView documentView) where TView : Form, IDocumentView
+        public static void Dock(DocumentPanel documentPanel, IDocumentView documentView)
         {
             if (documentPanel == null)
                 throw new ArgumentNullException("documentPanel");
@@ -42,8 +42,12 @@ namespace DocumentForms
             documentView.IsDocked = true;
 
             //Set Form-specific properties to make it appear docked.
-            documentView.TopLevel = false;
-            documentView.FormBorderStyle = FormBorderStyle.None;
+            Form docForm = documentView as Form;
+            if (docForm != null)
+            {
+                docForm.TopLevel = false;
+                docForm.FormBorderStyle = FormBorderStyle.None;
+            }
 
             documentView.ParentDocumentPanel = documentPanel;
             documentPanel.DockDocument(documentView);
@@ -108,9 +112,30 @@ namespace DocumentForms
 
                 docForm.Location = position;
 
+                // "Reset" the mouse status...
                 ReleaseCapture();
+                // ...and trick Windows in thinking that the user has clicked on the caption bar.
                 SendMessage(docForm.Handle, WmNcLButtonDown, HtCaption, 0);
             }
+        }
+
+        /// <summary>
+        /// Registers the given <paramref name="view"/> in the <paramref name="documentPanel"/>.
+        /// When the user drags the view over the <see cref="DocumentPanel"/>, it can be docked.
+        /// </summary>
+        /// <param name="documentPanel"></param>
+        /// <param name="view"></param>
+        /// <returns>True if registration is successfull, false otherwhise.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="documentPanel"/> or <paramref name="view"/> is a null reference.</exception>
+        public static bool RegisterView(DocumentPanel documentPanel, IDocumentView view)
+        {
+            if (documentPanel == null)
+                throw new ArgumentNullException("documentPanel");
+
+            if (view == null)
+                throw new ArgumentNullException("view");
+
+            return documentPanel.RegisterViewForDocking(view);
         }
     }
 }

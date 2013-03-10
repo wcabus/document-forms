@@ -31,14 +31,14 @@
             this.DocumentHolderPanel = new System.Windows.Forms.Panel();
             this.HeaderPanel = new System.Windows.Forms.Panel();
             this.pnlFlowHolder = new System.Windows.Forms.Panel();
-            this.pnlScrollRight = new System.Windows.Forms.Panel();
-            this.pnlCloseActiveView = new System.Windows.Forms.Panel();
-            this.pnlShowAllViews = new System.Windows.Forms.Panel();
-            this.ScrollLeftPanel = new System.Windows.Forms.Panel();
             this.DocumentButtonPanel = new System.Windows.Forms.Panel();
+            this.pnlScrollRight = new System.Windows.Forms.Panel();
             this.btnScrollRight = new DocumentForms.FlatButton();
+            this.pnlCloseActiveView = new System.Windows.Forms.Panel();
             this.btnCloseActiveView = new DocumentForms.FlatButton();
+            this.pnlShowAllViews = new System.Windows.Forms.Panel();
             this.btnShowViews = new DocumentForms.FlatButton();
+            this.ScrollLeftPanel = new System.Windows.Forms.Panel();
             this.btnScrollLeft = new DocumentForms.FlatButton();
             this.HeaderPanel.SuspendLayout();
             this.pnlFlowHolder.SuspendLayout();
@@ -73,6 +73,7 @@
             // 
             // pnlFlowHolder
             // 
+            this.pnlFlowHolder.AllowDrop = true;
             this.pnlFlowHolder.BackColor = System.Drawing.Color.Transparent;
             this.pnlFlowHolder.Controls.Add(this.DocumentButtonPanel);
             this.pnlFlowHolder.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -80,6 +81,16 @@
             this.pnlFlowHolder.Name = "pnlFlowHolder";
             this.pnlFlowHolder.Size = new System.Drawing.Size(577, 21);
             this.pnlFlowHolder.TabIndex = 5;
+            this.pnlFlowHolder.DragDrop += new System.Windows.Forms.DragEventHandler(this.WhenDropped);
+            this.pnlFlowHolder.DragOver += new System.Windows.Forms.DragEventHandler(this.WhenDragOver);
+            // 
+            // DocumentButtonPanel
+            // 
+            this.DocumentButtonPanel.Location = new System.Drawing.Point(0, 0);
+            this.DocumentButtonPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.DocumentButtonPanel.Name = "DocumentButtonPanel";
+            this.DocumentButtonPanel.Size = new System.Drawing.Size(200, 21);
+            this.DocumentButtonPanel.TabIndex = 0;
             // 
             // pnlScrollRight
             // 
@@ -91,45 +102,6 @@
             this.pnlScrollRight.Size = new System.Drawing.Size(18, 21);
             this.pnlScrollRight.TabIndex = 4;
             // 
-            // pnlCloseActiveView
-            // 
-            this.pnlCloseActiveView.BackColor = System.Drawing.Color.Transparent;
-            this.pnlCloseActiveView.Controls.Add(this.btnCloseActiveView);
-            this.pnlCloseActiveView.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlCloseActiveView.Location = new System.Drawing.Point(613, 0);
-            this.pnlCloseActiveView.Name = "pnlCloseActiveView";
-            this.pnlCloseActiveView.Size = new System.Drawing.Size(18, 21);
-            this.pnlCloseActiveView.TabIndex = 3;
-            this.pnlCloseActiveView.Visible = false;
-            // 
-            // pnlShowAllViews
-            // 
-            this.pnlShowAllViews.BackColor = System.Drawing.Color.Transparent;
-            this.pnlShowAllViews.Controls.Add(this.btnShowViews);
-            this.pnlShowAllViews.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlShowAllViews.Location = new System.Drawing.Point(631, 0);
-            this.pnlShowAllViews.Name = "pnlShowAllViews";
-            this.pnlShowAllViews.Size = new System.Drawing.Size(18, 21);
-            this.pnlShowAllViews.TabIndex = 2;
-            // 
-            // ScrollLeftPanel
-            // 
-            this.ScrollLeftPanel.BackColor = System.Drawing.Color.Transparent;
-            this.ScrollLeftPanel.Controls.Add(this.btnScrollLeft);
-            this.ScrollLeftPanel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.ScrollLeftPanel.Location = new System.Drawing.Point(0, 0);
-            this.ScrollLeftPanel.Name = "ScrollLeftPanel";
-            this.ScrollLeftPanel.Size = new System.Drawing.Size(18, 21);
-            this.ScrollLeftPanel.TabIndex = 1;
-            // 
-            // DocumentButtonPanel
-            // 
-            this.DocumentButtonPanel.Location = new System.Drawing.Point(0, 0);
-            this.DocumentButtonPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.DocumentButtonPanel.Name = "DocumentButtonPanel";
-            this.DocumentButtonPanel.Size = new System.Drawing.Size(200, 21);
-            this.DocumentButtonPanel.TabIndex = 0;
-            // 
             // btnScrollRight
             // 
             this.btnScrollRight.ArrowDirection = System.Windows.Forms.ArrowDirection.Right;
@@ -140,6 +112,17 @@
             this.btnScrollRight.ParentPanel = null;
             this.btnScrollRight.Size = new System.Drawing.Size(15, 15);
             this.btnScrollRight.TabIndex = 0;
+            // 
+            // pnlCloseActiveView
+            // 
+            this.pnlCloseActiveView.BackColor = System.Drawing.Color.Transparent;
+            this.pnlCloseActiveView.Controls.Add(this.btnCloseActiveView);
+            this.pnlCloseActiveView.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pnlCloseActiveView.Location = new System.Drawing.Point(613, 0);
+            this.pnlCloseActiveView.Name = "pnlCloseActiveView";
+            this.pnlCloseActiveView.Size = new System.Drawing.Size(18, 21);
+            this.pnlCloseActiveView.TabIndex = 3;
+            this.pnlCloseActiveView.Visible = false;
             // 
             // btnCloseActiveView
             // 
@@ -153,6 +136,16 @@
             this.btnCloseActiveView.TabIndex = 1;
             this.btnCloseActiveView.Click += new System.EventHandler(this.WhenCloseClicked);
             // 
+            // pnlShowAllViews
+            // 
+            this.pnlShowAllViews.BackColor = System.Drawing.Color.Transparent;
+            this.pnlShowAllViews.Controls.Add(this.btnShowViews);
+            this.pnlShowAllViews.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pnlShowAllViews.Location = new System.Drawing.Point(631, 0);
+            this.pnlShowAllViews.Name = "pnlShowAllViews";
+            this.pnlShowAllViews.Size = new System.Drawing.Size(18, 21);
+            this.pnlShowAllViews.TabIndex = 2;
+            // 
             // btnShowViews
             // 
             this.btnShowViews.ArrowDirection = System.Windows.Forms.ArrowDirection.Down;
@@ -163,6 +156,16 @@
             this.btnShowViews.ParentPanel = null;
             this.btnShowViews.Size = new System.Drawing.Size(15, 15);
             this.btnShowViews.TabIndex = 1;
+            // 
+            // ScrollLeftPanel
+            // 
+            this.ScrollLeftPanel.BackColor = System.Drawing.Color.Transparent;
+            this.ScrollLeftPanel.Controls.Add(this.btnScrollLeft);
+            this.ScrollLeftPanel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.ScrollLeftPanel.Location = new System.Drawing.Point(0, 0);
+            this.ScrollLeftPanel.Name = "ScrollLeftPanel";
+            this.ScrollLeftPanel.Size = new System.Drawing.Size(18, 21);
+            this.ScrollLeftPanel.TabIndex = 1;
             // 
             // btnScrollLeft
             // 

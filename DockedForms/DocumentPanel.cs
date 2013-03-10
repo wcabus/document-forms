@@ -14,6 +14,7 @@ namespace DocumentForms
     public partial class DocumentPanel : UserControl
     {
         private readonly List<DocumentHeaderButton> _documentButtons = new List<DocumentHeaderButton>();
+        private readonly List<IDocumentView> _registeredViews = new List<IDocumentView>();
 
         /// <summary>
         /// Default constructor
@@ -50,13 +51,13 @@ namespace DocumentForms
         /// Docks the given <paramref name="documentView"/> into this DocumentPanel.
         /// </summary>
         /// <param name="documentView"></param>
-        public void DockDocument<TView>(TView documentView) where TView : Form, IDocumentView
+        public void DockDocument(IDocumentView documentView)
         {
             //Create a header button
             DocumentHeaderButton button = new DocumentHeaderButton
                 {
                     Location = new Point(GetNextButtonPosition(), 0),
-                    DocumentView = documentView
+                    DocumentView = documentView as Form
                 };
 
             //Add the button to the button panel
@@ -77,6 +78,8 @@ namespace DocumentForms
         /// <param name="documentView"></param>
         public void UndockDocument(IDocumentView documentView)
         {
+            //Note: this method does not unregister the view: it can still be docked!.
+
             //Find the button for this view
             DocumentHeaderButton button = _documentButtons.FirstOrDefault(b => b.DocumentView == documentView);
             if (button == null)
@@ -101,6 +104,8 @@ namespace DocumentForms
 
         internal void UndockButton(DocumentHeaderButton button)
         {
+            //Note: this method does not unregister the view: it can still be docked!.
+
             //Remove the button to the button panel
             _documentButtons.Remove(button);
             DocumentButtonPanel.Controls.Remove(button);
@@ -176,6 +181,56 @@ namespace DocumentForms
             DocumentViewHelper.Undock(ActiveView);
 
             local.Dispose();
+        }
+
+        /// <summary>
+        /// Registers the given <paramref name="view"/> in the <see cref="DocumentPanel"/>.
+        /// When the user drags the view over the panel, it can be docked.
+        /// </summary>
+        /// <param name="view"></param>
+        /// <returns>True if registration is successfull, false otherwhise (typically: it has already been registered).</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the <paramref name="view"/> is a null reference.</exception>
+        public bool RegisterViewForDocking(IDocumentView view)
+        {
+            if (view == null)
+                throw new ArgumentNullException("view");
+
+            if (_registeredViews.Contains(view))
+                return false;
+
+            Form docForm = view as Form;
+            if (docForm == null)
+                return false;
+
+            _registeredViews.Add(view);
+            docForm.Move += (s, e) =>
+                {
+                    if (pnlFlowHolder.ClientRectangle.Contains(PointToClient(docForm.Location)))
+                    {
+                        DocumentViewHelper.ReleaseCapture();
+                        docForm.Location = Point.Empty;
+                        DocumentViewHelper.Dock(this, docForm as IDocumentView);
+                    }
+
+                    //docForm.DoDragDrop(docForm as IDocumentView, DragDropEffects.Move);
+                };
+            docForm.Disposed += (s, e) => _registeredViews.Remove(docForm as IDocumentView);
+
+            return true;
+        }
+
+        private void WhenDragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(IDocumentView)))
+                e.Effect = DragDropEffects.Move;
+        }
+
+        private void WhenDropped(object sender, DragEventArgs e)
+        {
+            if (!e.Data.GetDataPresent(typeof(IDocumentView)))
+                return;
+
+            DocumentViewHelper.Dock(this, (IDocumentView)e.Data.GetData(typeof(IDocumentView)));
         }
     }
 }
