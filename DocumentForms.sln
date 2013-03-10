@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentForms", "DockedForms\DocumentForms.csproj", "{0EF61B02-5EE8-41E3-A2A7-5CEFA61BB2D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentForms.Sample", "DocumentForms.Sample\DocumentForms.Sample.csproj", "{2D1B21A8-27B7-4DE9-B36C-72DC9354596A}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs34
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = DockedForms\\DocumentForms.csproj
+		SccProjectName1 = DockedForms
+		SccLocalPath1 = DockedForms
+		SccProjectUniqueName2 = DocumentForms.Sample\\DocumentForms.Sample.csproj
+		SccProjectName2 = DocumentForms.Sample
+		SccLocalPath2 = DocumentForms.Sample
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0EF61B02-5EE8-41E3-A2A7-5CEFA61BB2D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EF61B02-5EE8-41E3-A2A7-5CEFA61BB2D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EF61B02-5EE8-41E3-A2A7-5CEFA61BB2D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EF61B02-5EE8-41E3-A2A7-5CEFA61BB2D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D1B21A8-27B7-4DE9-B36C-72DC9354596A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D1B21A8-27B7-4DE9-B36C-72DC9354596A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D1B21A8-27B7-4DE9-B36C-72DC9354596A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D1B21A8-27B7-4DE9-B36C-72DC9354596A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
