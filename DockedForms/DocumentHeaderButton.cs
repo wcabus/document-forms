@@ -36,6 +36,9 @@ namespace DocumentForms
                     return;
 
                 _documentView = value;
+                if (value == null)
+                    return;
+
                 btnClose.ParentPanel = ParentDocumentPanel;
 
                 //Make sure to update the button if the text of the document would change
@@ -112,9 +115,32 @@ namespace DocumentForms
             ParentDocumentPanel.SetActiveButton(this);
         }
 
+        private bool _mouseDown;
+        private Point _startPos = Point.Empty;
+
+        // When moving the button while the left mouse button is pressed, undock the window
+        // if the user drags away for a certain amount of pixels.
         private void WhenDragStarts(object sender, MouseEventArgs e)
         {
-            ParentDocumentPanel.UndockButton(this);
+            if (e.Button == MouseButtons.Left)
+                _startPos = e.Location;
+        }
+
+        private void WhenMouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+                _startPos = Point.Empty;
+        }
+
+        private void WhenDrag(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left && _startPos != Point.Empty)
+            {
+                Point p = new Point(e.X - _startPos.X, e.Y - _startPos.Y);
+                
+                if (Math.Abs(p.X) > 25 || Math.Abs(p.Y) > 25)
+                    ParentDocumentPanel.UndockButton(this);
+            }
         }
     }
 }

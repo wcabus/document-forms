@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -56,7 +55,7 @@ namespace DocumentForms
         /// </summary>
         /// <param name="documentView"></param>
         /// <exception cref="ArgumentNullException">Thrown if the <paramref name="documentView"/> is a null reference.</exception>
-        public static void Undock<TView>(TView documentView) where TView : Form, IDocumentView
+        public static void Undock(IDocumentView documentView)
         {
             if (documentView == null)
                 throw new ArgumentNullException("documentView");
@@ -70,8 +69,9 @@ namespace DocumentForms
             documentView.IsDocked = false;
 
             //Set Form-specific properties to let it become a window again.
-            documentView.FormBorderStyle = documentView.WindowBorderStyle;
-            documentView.TopLevel = true; //set this as last, Dock must be DockStyle.None when setting this property to true.
+            Form docForm = (documentView as Form);
+            docForm.FormBorderStyle = documentView.WindowBorderStyle;
+            docForm.TopLevel = true; //set this as last, Dock must be DockStyle.None when setting this property to true.
         }
 
         /// <summary>

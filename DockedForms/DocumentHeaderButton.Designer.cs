@@ -49,6 +49,8 @@
             this.pnlFill.MouseDown += new System.Windows.Forms.MouseEventHandler(this.WhenDragStarts);
             this.pnlFill.MouseEnter += new System.EventHandler(this.WhenButtonMouseEnter);
             this.pnlFill.MouseLeave += new System.EventHandler(this.WhenButtonMouseLeave);
+            this.pnlFill.MouseMove += new System.Windows.Forms.MouseEventHandler(this.WhenDrag);
+            this.pnlFill.MouseUp += new System.Windows.Forms.MouseEventHandler(this.WhenMouseUp);
             // 
             // btnClose
             // 
@@ -81,6 +83,8 @@
             this.lblDocumentText.MouseDown += new System.Windows.Forms.MouseEventHandler(this.WhenDragStarts);
             this.lblDocumentText.MouseEnter += new System.EventHandler(this.WhenButtonMouseEnter);
             this.lblDocumentText.MouseLeave += new System.EventHandler(this.WhenButtonMouseLeave);
+            this.lblDocumentText.MouseMove += new System.Windows.Forms.MouseEventHandler(this.WhenDrag);
+            this.lblDocumentText.MouseUp += new System.Windows.Forms.MouseEventHandler(this.WhenMouseUp);
             // 
             // pnlBottom
             // 

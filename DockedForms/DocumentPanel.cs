@@ -77,16 +77,28 @@ namespace DocumentForms
         /// Undocks the given <paramref name="documentView"/> from this DocumentPanel.
         /// </summary>
         /// <param name="documentView"></param>
-        public void UndockDocument<TView>(TView documentView) where TView : Form, IDocumentView
+        public void UndockDocument(IDocumentView documentView)
         {
             //Find the button for this view
-
+            DocumentHeaderButton button = _documentButtons.FirstOrDefault(b => b.DocumentView == documentView);
+            if (button == null)
+                return;
 
             //Remove the button from the header
+            _documentButtons.Remove(button);
+            DocumentButtonPanel.Controls.Remove(button);
+            RecalculateHeaderWidth();
 
+            DocumentHolderPanel.Controls.Clear();
 
             //Dispose the button
+            button.ParentDocumentPanel = null;
+            button.DocumentView = null;
+            button.Dispose();
 
+            //Make another button active.
+            if (_documentButtons.Any())
+                SetActiveButton(_documentButtons.First());
         }
 
         internal void UndockButton(DocumentHeaderButton button)
@@ -97,11 +109,11 @@ namespace DocumentForms
             RecalculateHeaderWidth();
 
             DocumentHolderPanel.Controls.Clear();
+            //Make another button active.
+            if (_documentButtons.Any())
+                SetActiveButton(_documentButtons.First());
 
             DocumentViewHelper.UndockView(button.DocumentView as IDocumentView);
-
-            //Make another button active.
-            //SetActiveButton(button);
         }
 
         internal void SetActiveButton(DocumentHeaderButton button)
@@ -133,6 +145,17 @@ namespace DocumentForms
         /// </summary>
         [Browsable(false)]
         public DocumentPanelRenderer Renderer { get; set; }
+
+        public IDocumentView ActiveView
+        {
+            get
+            {
+                if (!_documentButtons.Any())
+                    return null;
+
+                return _documentButtons.First(b => b.IsActive).DocumentView as IDocumentView;
+            }
+        }
 
         private void WhenHeaderPaintFired(object sender, PaintEventArgs e)
         {
