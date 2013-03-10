@@ -46,7 +46,7 @@
             this.pnlFill.Size = new System.Drawing.Size(77, 18);
             this.pnlFill.TabIndex = 0;
             this.pnlFill.Click += new System.EventHandler(this.WhenButtonClick);
-            this.pnlFill.MouseDown += new System.Windows.Forms.MouseEventHandler(this.WhenDragStarts);
+            this.pnlFill.MouseDown += new System.Windows.Forms.MouseEventHandler(this.WhenMouseDown);
             this.pnlFill.MouseEnter += new System.EventHandler(this.WhenButtonMouseEnter);
             this.pnlFill.MouseLeave += new System.EventHandler(this.WhenButtonMouseLeave);
             this.pnlFill.MouseMove += new System.Windows.Forms.MouseEventHandler(this.WhenDrag);
@@ -63,6 +63,7 @@
             this.btnClose.ParentPanel = null;
             this.btnClose.Size = new System.Drawing.Size(15, 15);
             this.btnClose.TabIndex = 3;
+            this.btnClose.Click += new System.EventHandler(this.WhenCloseClicked);
             this.btnClose.MouseEnter += new System.EventHandler(this.WhenButtonMouseEnter);
             this.btnClose.MouseLeave += new System.EventHandler(this.WhenButtonMouseLeave);
             // 
@@ -80,7 +81,7 @@
             this.lblDocumentText.TabIndex = 2;
             this.lblDocumentText.Text = "ChildForm";
             this.lblDocumentText.Click += new System.EventHandler(this.WhenButtonClick);
-            this.lblDocumentText.MouseDown += new System.Windows.Forms.MouseEventHandler(this.WhenDragStarts);
+            this.lblDocumentText.MouseDown += new System.Windows.Forms.MouseEventHandler(this.WhenMouseDown);
             this.lblDocumentText.MouseEnter += new System.EventHandler(this.WhenButtonMouseEnter);
             this.lblDocumentText.MouseLeave += new System.EventHandler(this.WhenButtonMouseLeave);
             this.lblDocumentText.MouseMove += new System.Windows.Forms.MouseEventHandler(this.WhenDrag);

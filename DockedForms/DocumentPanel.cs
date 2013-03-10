@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace DocumentForms
@@ -146,6 +144,9 @@ namespace DocumentForms
         [Browsable(false)]
         public DocumentPanelRenderer Renderer { get; set; }
 
+        /// <summary>
+        /// Returns the currently active <see cref="IDocumentView"/>.
+        /// </summary>
         public IDocumentView ActiveView
         {
             get
@@ -160,6 +161,21 @@ namespace DocumentForms
         private void WhenHeaderPaintFired(object sender, PaintEventArgs e)
         {
             Renderer.DrawHeader(new HeaderRenderEventArgs(e.Graphics, HeaderPanel, e.ClipRectangle, SystemColors.Control, SystemColors.ControlDarkDark));
+        }
+
+        private void WhenCloseClicked(object sender, EventArgs e)
+        {
+            if (ActiveView == null) 
+                return;
+
+            var local = ActiveView as Form;
+            if (local == null)
+                return;
+
+            local.Close();
+            DocumentViewHelper.Undock(ActiveView);
+
+            local.Dispose();
         }
     }
 }

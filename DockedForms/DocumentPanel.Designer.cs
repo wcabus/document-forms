@@ -35,11 +35,11 @@
             this.pnlCloseActiveView = new System.Windows.Forms.Panel();
             this.pnlShowAllViews = new System.Windows.Forms.Panel();
             this.ScrollLeftPanel = new System.Windows.Forms.Panel();
+            this.DocumentButtonPanel = new System.Windows.Forms.Panel();
             this.btnScrollRight = new DocumentForms.FlatButton();
             this.btnCloseActiveView = new DocumentForms.FlatButton();
             this.btnShowViews = new DocumentForms.FlatButton();
             this.btnScrollLeft = new DocumentForms.FlatButton();
-            this.DocumentButtonPanel = new System.Windows.Forms.Panel();
             this.HeaderPanel.SuspendLayout();
             this.pnlFlowHolder.SuspendLayout();
             this.pnlScrollRight.SuspendLayout();
@@ -122,6 +122,14 @@
             this.ScrollLeftPanel.Size = new System.Drawing.Size(18, 21);
             this.ScrollLeftPanel.TabIndex = 1;
             // 
+            // DocumentButtonPanel
+            // 
+            this.DocumentButtonPanel.Location = new System.Drawing.Point(0, 0);
+            this.DocumentButtonPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.DocumentButtonPanel.Name = "DocumentButtonPanel";
+            this.DocumentButtonPanel.Size = new System.Drawing.Size(200, 21);
+            this.DocumentButtonPanel.TabIndex = 0;
+            // 
             // btnScrollRight
             // 
             this.btnScrollRight.ArrowDirection = System.Windows.Forms.ArrowDirection.Right;
@@ -143,6 +151,7 @@
             this.btnCloseActiveView.ParentPanel = null;
             this.btnCloseActiveView.Size = new System.Drawing.Size(15, 15);
             this.btnCloseActiveView.TabIndex = 1;
+            this.btnCloseActiveView.Click += new System.EventHandler(this.WhenCloseClicked);
             // 
             // btnShowViews
             // 
@@ -165,14 +174,6 @@
             this.btnScrollLeft.ParentPanel = null;
             this.btnScrollLeft.Size = new System.Drawing.Size(15, 15);
             this.btnScrollLeft.TabIndex = 0;
-            // 
-            // DocumentButtonPanel
-            // 
-            this.DocumentButtonPanel.Location = new System.Drawing.Point(0, 0);
-            this.DocumentButtonPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.DocumentButtonPanel.Name = "DocumentButtonPanel";
-            this.DocumentButtonPanel.Size = new System.Drawing.Size(200, 21);
-            this.DocumentButtonPanel.TabIndex = 0;
             // 
             // DocumentPanel
             // 
