@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>http://documentforms.codeplex.com/license</licenseUrl>
+    <projectUrl>http://documentforms.codeplex.com</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>- Moved all color references into an IColorTable interface, so you can define your own colorscheme.</releaseNotes>
+    <copyright>Copyright 2013</copyright>
+    <tags>WinForms</tags>
+  </metadata>
+</package>

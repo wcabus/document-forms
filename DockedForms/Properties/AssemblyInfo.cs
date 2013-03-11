@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("DocumentForms")]
 [assembly: AssemblyDescription("DocumentForms Control Library")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("GotSharp")]
+[assembly: AssemblyCompany("Wesley Cabus")]
 [assembly: AssemblyProduct("DocumentForms")]
-[assembly: AssemblyCopyright("Copyright © GotSharp 2013")]
+[assembly: AssemblyCopyright("Copyright © Wesley Cabus 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.2.*")]
+[assembly: AssemblyVersion("0.2.1.0")]
 [assembly: AssemblyFileVersion("0.2.1.0")]
