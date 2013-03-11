@@ -165,7 +165,7 @@ namespace DocumentForms
 
         private void WhenHeaderPaintFired(object sender, PaintEventArgs e)
         {
-            Renderer.DrawHeader(new HeaderRenderEventArgs(e.Graphics, HeaderPanel, e.ClipRectangle, SystemColors.Control, SystemColors.ControlDarkDark));
+            Renderer.DrawHeader(new HeaderRenderEventArgs(e.Graphics, HeaderPanel, e.ClipRectangle, Renderer.ColorTable.DocumentTabBackground, Renderer.ColorTable.DocumentTabBottomBackground));
         }
 
         private void WhenCloseClicked(object sender, EventArgs e)

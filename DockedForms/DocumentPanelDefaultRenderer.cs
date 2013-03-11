@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using System.Windows.Forms;
 
 namespace DocumentForms
 {
@@ -8,6 +7,42 @@ namespace DocumentForms
     /// </summary>
     public class DocumentPanelDefaultRenderer : DocumentPanelRenderer
     {
+        private class DefaultColorTable : IColorTable
+        {
+            private readonly static Font DefaultFont = new Font("Segoe UI", 8.25f);
+            private readonly static Font DefaultBoldFont = new Font(DefaultFont, FontStyle.Bold);
+
+            public Color DocumentTabBackground { get { return SystemColors.Control; } }
+            public Color DocumentTabBottomBackground { get { return SystemColors.ControlDarkDark; } }
+            
+            public Color ActiveDocumentTabBackground { get { return SystemColors.ActiveCaption; } }
+            public Color ActiveDocumentTabBottomBackground { get { return ActiveDocumentTabBackground; } }
+            public Color ActiveDocumentTabForeground { get { return SystemColors.ActiveCaptionText; } }
+            public Font ActiveDocumentTabFont { get { return DefaultBoldFont; } }
+
+            public Color InactiveDocumentTabBackground { get { return SystemColors.InactiveCaption; } }
+            public Color InactiveDocumentTabBottomBackground { get { return Color.Transparent; } }
+            public Color InactiveDocumentTabForeground { get { return SystemColors.InactiveCaptionText; } }
+            public Font InactiveDocumentTabFont { get { return DefaultFont; } }
+
+            public Color ButtonBackground { get { return Color.Empty; } }
+            public Color ButtonForeground { get { return SystemColors.ControlText; } }
+
+            public Color ButtonHighlightBackground { get { return SystemColors.ButtonHighlight; } }
+            public Color ButtonHighlightForeground { get { return ButtonForeground; } }
+
+            public Color ButtonPressedBackground { get { return SystemColors.ButtonShadow; } }
+            public Color ButtonPressedForeground { get { return Color.White; } }
+        }
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public DocumentPanelDefaultRenderer()
+        {
+            ColorTable = new DefaultColorTable();
+        }
+
         protected override void OnRenderArrow(ArrowRenderEventArgs e)
         {
             if (RendererOverride != null)

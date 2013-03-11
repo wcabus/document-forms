@@ -47,6 +47,7 @@ namespace DocumentForms
             {
                 docForm.TopLevel = false;
                 docForm.FormBorderStyle = FormBorderStyle.None;
+                docForm.Dock = DockStyle.Fill;
             }
 
             documentView.ParentDocumentPanel = documentPanel;
@@ -77,8 +78,8 @@ namespace DocumentForms
             if (docForm != null)
             {
                 docForm.FormBorderStyle = documentView.WindowBorderStyle;
-                docForm.TopLevel = true;
-                    //set this as last, Dock must be DockStyle.None when setting this property to true.
+                docForm.Dock = DockStyle.None;
+                docForm.TopLevel = true; //set this as last, Dock must be DockStyle.None when setting this property to true.
             }
         }
 
@@ -104,6 +105,7 @@ namespace DocumentForms
             if (docForm != null)
             {
                 docForm.FormBorderStyle = documentView.WindowBorderStyle;
+                docForm.Dock = DockStyle.None;
                 docForm.TopLevel = true;
                     //set this as last, Dock must be DockStyle.None when setting this property to true.
 

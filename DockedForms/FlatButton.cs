@@ -56,9 +56,11 @@ namespace DocumentForms
 
             Color backgroundColor = Color.Empty;
             if (IsMouseHover && IsPressed)
-                backgroundColor = SystemColors.Highlight;
+                backgroundColor = ParentPanel.Renderer.ColorTable.ButtonPressedBackground;
             else if (IsMouseHover)
-                backgroundColor = SystemColors.ButtonHighlight;
+                backgroundColor = ParentPanel.Renderer.ColorTable.ButtonHighlightBackground;
+            else
+                backgroundColor = ParentPanel.Renderer.ColorTable.ButtonBackground;
 
             if (backgroundColor != Color.Empty)
                 ParentPanel.Renderer.DrawBackground(new RenderEventArgs(e.Graphics, this, ClientRectangle,
@@ -66,12 +68,12 @@ namespace DocumentForms
 
             if (IsCloseButton)
             {
-                Color glyphColor = SystemColors.ActiveCaptionText;
+                Color glyphColor = ParentPanel.Renderer.ColorTable.ButtonForeground;
 
                 if (IsMouseHover && IsPressed)
-                    glyphColor = SystemColors.HighlightText;
+                    glyphColor = ParentPanel.Renderer.ColorTable.ButtonPressedForeground;
                 else if (IsMouseHover)
-                    glyphColor = SystemColors.Highlight;
+                    glyphColor = ParentPanel.Renderer.ColorTable.ButtonHighlightForeground;
                 
                 ParentPanel.Renderer.DrawCloseGlyph(new RenderEventArgs(e.Graphics, this, ClientRectangle, glyphColor));
                 
@@ -80,13 +82,13 @@ namespace DocumentForms
 
             if (IsArrowButton)
             {
-                Color arrowColor = SystemColors.ActiveCaptionText;
-                
-                if (IsMouseHover && IsPressed)
-                    arrowColor = SystemColors.HighlightText;
-                else if (IsMouseHover)
-                    arrowColor = SystemColors.Highlight;
+                Color arrowColor = ParentPanel.Renderer.ColorTable.ButtonForeground;
 
+                if (IsMouseHover && IsPressed)
+                    arrowColor = ParentPanel.Renderer.ColorTable.ButtonPressedForeground;
+                else if (IsMouseHover)
+                    arrowColor = ParentPanel.Renderer.ColorTable.ButtonHighlightForeground;
+                
                 ParentPanel.Renderer.DrawArrow(new ArrowRenderEventArgs(e.Graphics, this, ClientRectangle, arrowColor,
                                                                         ArrowDirection));
             }

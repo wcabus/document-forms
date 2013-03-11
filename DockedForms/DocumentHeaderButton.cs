@@ -67,10 +67,13 @@ namespace DocumentForms
 
                 _isActive = value;
 
-                lblDocumentText.Font = new Font(lblDocumentText.Font, _isActive ? FontStyle.Bold : FontStyle.Regular);
-                pnlFill.BackColor = _isActive || IsMouseHover ? SystemColors.ActiveCaption : SystemColors.InactiveCaption;
-                pnlBottom.BackColor = _isActive || IsMouseHover ? SystemColors.ActiveCaption : Color.Transparent;
-                
+                lblDocumentText.Font = _isActive ? ParentDocumentPanel.Renderer.ColorTable.ActiveDocumentTabFont : ParentDocumentPanel.Renderer.ColorTable.InactiveDocumentTabFont;
+                pnlFill.BackColor = _isActive || IsMouseHover ? ParentDocumentPanel.Renderer.ColorTable.ActiveDocumentTabBackground : ParentDocumentPanel.Renderer.ColorTable.InactiveDocumentTabBackground;
+                pnlBottom.BackColor = _isActive || IsMouseHover ? ParentDocumentPanel.Renderer.ColorTable.ActiveDocumentTabBottomBackground : ParentDocumentPanel.Renderer.ColorTable.InactiveDocumentTabBottomBackground;
+                lblDocumentText.ForeColor = _isActive || IsMouseHover
+                                                ? ParentDocumentPanel.Renderer.ColorTable.ActiveDocumentTabForeground
+                                                : ParentDocumentPanel.Renderer.ColorTable.InactiveDocumentTabForeground;
+
                 UpdateButtonText(); //font has changed, resize the button accordingly
             }
         }
@@ -96,8 +99,12 @@ namespace DocumentForms
                     return;
 
                 _isMouseOver = value;
-                pnlFill.BackColor = _isActive || IsMouseHover ? SystemColors.ActiveCaption : SystemColors.InactiveCaption;
-                pnlBottom.BackColor = _isActive || IsMouseHover ? SystemColors.ActiveCaption : Color.Transparent;
+                pnlFill.BackColor = _isActive || IsMouseHover ? ParentDocumentPanel.Renderer.ColorTable.ActiveDocumentTabBackground : ParentDocumentPanel.Renderer.ColorTable.InactiveDocumentTabBackground;
+                pnlBottom.BackColor = _isActive || IsMouseHover ? ParentDocumentPanel.Renderer.ColorTable.ActiveDocumentTabBottomBackground : ParentDocumentPanel.Renderer.ColorTable.InactiveDocumentTabBottomBackground;
+                lblDocumentText.ForeColor = _isActive || IsMouseHover
+                                                ? ParentDocumentPanel.Renderer.ColorTable.ActiveDocumentTabForeground
+                                                : ParentDocumentPanel.Renderer.ColorTable.InactiveDocumentTabForeground;
+
             } 
         }
 

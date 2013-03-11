@@ -9,6 +9,11 @@ namespace DocumentForms
     /// </summary>
     public abstract class DocumentPanelRenderer
     {
+        /// <summary>
+        /// Gets the <see cref="IColorTable"/> used to draw the different elements.
+        /// </summary>
+        public IColorTable ColorTable { get; protected set; }
+
         /// <summary>Occurs when an arrow is rendered.</summary>
         public event EventHandler<ArrowRenderEventArgs> RenderArrow;
 
