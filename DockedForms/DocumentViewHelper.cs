@@ -118,8 +118,11 @@ namespace DocumentForms
                     docForm.TopLevel = true;
                     //set this as last, Dock must be DockStyle.None when setting this property to true.
 
-                    WindowsApi.SetWindowPos(docForm.Handle, IntPtr.Zero, docForm.Left, docForm.Top, docForm.Width,
-                                            docForm.Height, SetWindowPosFlags.SwpFrameChanged);
+                    if (!docForm.IsDisposed)
+                    {
+                        WindowsApi.SetWindowPos(docForm.Handle, IntPtr.Zero, docForm.Left, docForm.Top, docForm.Width,
+                                                docForm.Height, SetWindowPosFlags.SwpFrameChanged);
+                    }
 
                     if (isDragging)
                     {

@@ -136,7 +136,7 @@ namespace DocumentForms
         {
             //deactivate all other buttons
             var otherButton = _documentButtons.FirstOrDefault(b => b.IsActive);
-            if (otherButton == button)
+            if (otherButton == button && otherButton != null)
                 return;
 
             _previousDocument = otherButton;
