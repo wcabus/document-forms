@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Drawing;
+using System.Windows.Forms;
 
 namespace DocumentForms
 {
@@ -13,6 +14,11 @@ namespace DocumentForms
         bool IsDocked { get; set; }
 
         /// <summary>
+        /// Gets or sets if this view is currently in the process of being docked or undocked.
+        /// </summary>
+        bool IsDockingOrUndocking { get; set; }
+
+        /// <summary>
         /// Gets the <see cref="DocumentPanel"/> that currently contains this IDocumentView.
         /// </summary>
         /// <returns>A null reference if the current IDocumentView is not docked.</returns>
@@ -22,5 +28,20 @@ namespace DocumentForms
         /// Gets the <see cref="FormBorderStyle"/> used when the view is shown as a window.
         /// </summary>
         FormBorderStyle WindowBorderStyle { get; }
+
+        /// <summary>
+        /// Gets the <see cref="Font"/> used when the view if shown as a window.
+        /// </summary>
+        Font WindowFont { get; }
+
+        /// <summary>
+        /// Gets the <see cref="FormWindowState"/> used when the view is shown as a window.
+        /// </summary>
+        FormWindowState OriginalWindowState { get; }
+
+        /// <summary>
+        /// Gets 
+        /// </summary>
+        bool WindowInTaskbar { get; }
     }
 }

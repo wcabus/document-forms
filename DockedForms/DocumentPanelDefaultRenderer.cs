@@ -14,7 +14,8 @@ namespace DocumentForms
 
             public Color DocumentTabBackground { get { return SystemColors.Control; } }
             public Color DocumentTabBottomBackground { get { return SystemColors.ControlDarkDark; } }
-            
+            public Color DocumentPanelBackground { get { return SystemColors.InactiveCaption; } }
+
             public Color ActiveDocumentTabBackground { get { return SystemColors.ActiveCaption; } }
             public Color ActiveDocumentTabBottomBackground { get { return ActiveDocumentTabBackground; } }
             public Color ActiveDocumentTabForeground { get { return SystemColors.ActiveCaptionText; } }

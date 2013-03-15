@@ -10,16 +10,13 @@ using System.Windows.Forms;
 
 namespace DocumentForms.Sample
 {
-    public partial class ChildForm : Form, IDocumentView
+    public partial class ChildForm : DocumentView
     {
         public ChildForm()
         {
             InitializeComponent();
-            WindowBorderStyle = FormBorderStyle;
+
         }
 
-        public bool IsDocked { get; set; }
-        public DocumentPanel ParentDocumentPanel { get; set; }
-        public FormBorderStyle WindowBorderStyle { get; private set; }
     }
 }

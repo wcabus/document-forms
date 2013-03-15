@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace DocumentForms
@@ -10,15 +9,6 @@ namespace DocumentForms
     /// </summary>
     public static class DocumentViewHelper
     {
-        private const int WmNcLButtonDown = 0xA1;
-        private const int HtCaption = 0x2;
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern IntPtr SendMessage(IntPtr hWnd, UInt32 msg, Int32 wParam, Int32 lParam);
-        
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        internal static extern IntPtr ReleaseCapture();
-
         /// <summary>
         /// Docks the <paramref name="documentView"/> inside the <paramref name="documentPanel"/>.
         /// If the <paramref name="documentView"/> has already been docked, this method undocks it first.
@@ -38,20 +28,37 @@ namespace DocumentForms
             if (documentView.IsDocked)
                 Undock(documentView); //Undock from the panel: this removes the button from the header
 
-            //Update the status on the view
-            documentView.IsDocked = true;
+            documentView.IsDockingOrUndocking = true;
 
-            //Set Form-specific properties to make it appear docked.
-            Form docForm = documentView as Form;
-            if (docForm != null)
+            try
             {
-                docForm.TopLevel = false;
-                docForm.FormBorderStyle = FormBorderStyle.None;
-                docForm.Dock = DockStyle.Fill;
-            }
+                //Update the status on the view
+                documentView.IsDocked = true;
 
-            documentView.ParentDocumentPanel = documentPanel;
-            documentPanel.DockDocument(documentView);
+                //Set Form-specific properties to make it appear docked.
+                Form docForm = documentView as Form;
+                if (docForm != null)
+                {
+                    docForm.TopLevel = false;
+                    docForm.FormBorderStyle = FormBorderStyle.None;
+                    docForm.ShowInTaskbar = false;
+                    docForm.Dock = DockStyle.Fill;
+                    docForm.WindowState = FormWindowState.Normal;
+
+                    WindowsApi.SetWindowPos(docForm.Handle, IntPtr.Zero, 0, 0, 0, 0,
+                                            SetWindowPosFlags.SwpNoActivate | SetWindowPosFlags.SwpNoMove |
+                                            SetWindowPosFlags.SwpNoSize |
+                                            SetWindowPosFlags.SwpNoZOrder | SetWindowPosFlags.SwpNoOwnerZOrder |
+                                            SetWindowPosFlags.SwpFrameChanged);
+                }
+
+                documentView.ParentDocumentPanel = documentPanel;
+                documentPanel.DockDocument(documentView);
+            }
+            finally
+            {
+                documentView.IsDockingOrUndocking = false;
+            }
         }
 
         /// <summary>
@@ -62,25 +69,7 @@ namespace DocumentForms
         /// <exception cref="ArgumentNullException">Thrown if the <paramref name="documentView"/> is a null reference.</exception>
         public static void Undock(IDocumentView documentView)
         {
-            if (documentView == null)
-                throw new ArgumentNullException("documentView");
-
-            if (!documentView.IsDocked)
-                return;
-
-            //Undock from the panel: this removes the button from the header
-            documentView.ParentDocumentPanel.UndockDocument(documentView);
-            //Update the status on the view
-            documentView.IsDocked = false;
-
-            //Set Form-specific properties to let it become a window again.
-            Form docForm = (documentView as Form);
-            if (docForm != null)
-            {
-                docForm.FormBorderStyle = documentView.WindowBorderStyle;
-                docForm.Dock = DockStyle.None;
-                docForm.TopLevel = true; //set this as last, Dock must be DockStyle.None when setting this property to true.
-            }
+            UndockInternal(documentView, false);
         }
 
         /// <summary>
@@ -91,33 +80,64 @@ namespace DocumentForms
         /// <exception cref="ArgumentNullException">Thrown if the <paramref name="documentView"/> is a null reference.</exception>
         public static void UndockView(IDocumentView documentView)
         {
+            UndockInternal(documentView, true);
+        }
+
+        private static void UndockInternal(IDocumentView documentView, bool isDragging)
+        {
             if (documentView == null)
                 throw new ArgumentNullException("documentView");
 
             if (!documentView.IsDocked)
                 return;
 
-            //Update the status on the view
-            documentView.IsDocked = false;
+            documentView.IsDockingOrUndocking = true;
 
-            //Set Form-specific properties to let it become a window again.
-            Form docForm = (documentView as Form);
-            if (docForm != null)
+            try
             {
-                docForm.FormBorderStyle = documentView.WindowBorderStyle;
-                docForm.Dock = DockStyle.None;
-                docForm.TopLevel = true;
+                if (!isDragging)
+                {
+                    //Undock from the panel: this removes the button from the header
+                    documentView.ParentDocumentPanel.UndockDocument(documentView);
+                }
+
+                //Update the status on the view
+                documentView.IsDocked = false;
+
+                //Set Form-specific properties to let it become a window again.
+                Form docForm = (documentView as Form);
+                if (docForm != null)
+                {
+                    docForm.FormBorderStyle = documentView.WindowBorderStyle;
+                    docForm.Font = documentView.WindowFont;
+                    docForm.Dock = DockStyle.None;
+                    docForm.ShowInTaskbar = documentView.WindowInTaskbar;
+                    docForm.WindowState = documentView.OriginalWindowState;
+
+                    docForm.Parent = null;
+                    docForm.TopLevel = true;
                     //set this as last, Dock must be DockStyle.None when setting this property to true.
 
-                var position = Cursor.Position;
-                position.Offset(-30, -10); //otherwhise, we'd be holding the top-left corner of the form
+                    WindowsApi.SetWindowPos(docForm.Handle, IntPtr.Zero, docForm.Left, docForm.Top, docForm.Width,
+                                            docForm.Height, SetWindowPosFlags.SwpFrameChanged);
 
-                docForm.Location = position;
+                    if (isDragging)
+                    {
+                        var position = Cursor.Position;
+                        position.Offset(-30, -10); //otherwhise, we'd be holding the top-left corner of the form
 
-                // "Reset" the mouse status...
-                ReleaseCapture();
-                // ...and trick Windows in thinking that the user has clicked on the caption bar.
-                SendMessage(docForm.Handle, WmNcLButtonDown, HtCaption, 0);
+                        docForm.Location = position;
+
+                        // "Reset" the mouse status...
+                        WindowsApi.ReleaseCapture();
+                        // ...and trick Windows in thinking that the user has clicked on the caption bar.
+                        WindowsApi.SendMessage(docForm.Handle, WindowsApi.WmNcLButtonDown, WindowsApi.HtCaption, 0);
+                    }
+                }
+            }
+            finally
+            {
+                documentView.IsDockingOrUndocking = false;
             }
         }
 

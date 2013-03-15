@@ -16,18 +16,23 @@ namespace DocumentForms
         private readonly List<DocumentHeaderButton> _documentButtons = new List<DocumentHeaderButton>();
         private readonly List<IDocumentView> _registeredViews = new List<IDocumentView>();
 
+        private DocumentPanelRenderer _renderer;
+
+        private DocumentHeaderButton _previousDocument = null;
+
         /// <summary>
         /// Default constructor
         /// </summary>
         public DocumentPanel()
         {
-            Renderer = new DocumentPanelDefaultRenderer();
-            
             InitializeComponent();
+
             btnScrollLeft.ParentPanel = this;
             btnScrollRight.ParentPanel = this;
             btnCloseActiveView.ParentPanel = this;
             btnShowViews.ParentPanel = this;
+
+            Renderer = new DocumentPanelDefaultRenderer();
         }
 
         private int GetNextButtonPosition()
@@ -53,11 +58,14 @@ namespace DocumentForms
         /// <param name="documentView"></param>
         public void DockDocument(IDocumentView documentView)
         {
+            Form docForm = documentView as Form;
+            docForm.Font = Font;
+
             //Create a header button
             DocumentHeaderButton button = new DocumentHeaderButton
                 {
                     Location = new Point(GetNextButtonPosition(), 0),
-                    DocumentView = documentView as Form
+                    DocumentView = docForm
                 };
 
             //Add the button to the button panel
@@ -95,16 +103,18 @@ namespace DocumentForms
             //Dispose the button
             button.ParentDocumentPanel = null;
             button.DocumentView = null;
+            if (_previousDocument == button)
+                _previousDocument = null;
+
             button.Dispose();
 
             //Make another button active.
-            if (_documentButtons.Any())
-                SetActiveButton(_documentButtons.First());
+            SetActiveButton(_previousDocument);
         }
 
         internal void UndockButton(DocumentHeaderButton button)
         {
-            //Note: this method does not unregister the view: it can still be docked!.
+            //Note: this method does not unregister the view: it can still be docked!
 
             //Remove the button to the button panel
             _documentButtons.Remove(button);
@@ -112,9 +122,12 @@ namespace DocumentForms
             RecalculateHeaderWidth();
 
             DocumentHolderPanel.Controls.Clear();
+
+            if (_previousDocument == button)
+                _previousDocument = null;
+
             //Make another button active.
-            if (_documentButtons.Any())
-                SetActiveButton(_documentButtons.First());
+            SetActiveButton(_previousDocument);
 
             DocumentViewHelper.UndockView(button.DocumentView as IDocumentView);
         }
@@ -122,11 +135,27 @@ namespace DocumentForms
         internal void SetActiveButton(DocumentHeaderButton button)
         {
             //deactivate all other buttons
-            foreach (var otherButton in _documentButtons.Where(b => b != button))
+            var otherButton = _documentButtons.FirstOrDefault(b => b.IsActive);
+            if (otherButton == button)
+                return;
+
+            _previousDocument = otherButton;
+            if (otherButton != null)
                 otherButton.IsActive = false;
 
+            if (button == null)
+            {
+                //Get the last document button
+                if (_documentButtons.Any())
+                    button = _documentButtons.Last();
+            }
+
+            if (button == null || !(button.DocumentView as IDocumentView).IsDocked)
+                return;
+
+            button.ParentDocumentPanel = this;
             button.IsActive = true;
-            
+
             //set the form in the bottom control
             DocumentHolderPanel.Controls.Clear();
             DocumentHolderPanel.Controls.Add(button.DocumentView);
@@ -147,7 +176,22 @@ namespace DocumentForms
         /// Gets or sets the renderer used to draw the <see cref="DocumentPanel"/> and related controls.
         /// </summary>
         [Browsable(false)]
-        public DocumentPanelRenderer Renderer { get; set; }
+        public DocumentPanelRenderer Renderer
+        {
+            get { return _renderer; } 
+            set
+            {
+                if (value == null)
+                    value = new DocumentPanelDefaultRenderer();
+
+                if (_renderer == value)
+                    return;
+
+                _renderer = value;
+                DocumentHolderPanel.BackColor = _renderer.ColorTable.DocumentPanelBackground;
+                Invalidate();
+            }
+        }
 
         /// <summary>
         /// Returns the currently active <see cref="IDocumentView"/>.
@@ -205,32 +249,40 @@ namespace DocumentForms
             _registeredViews.Add(view);
             docForm.Move += (s, e) =>
                 {
+                    IDocumentView document = docForm as IDocumentView;
+                    if (document.IsDockingOrUndocking)
+                        return;
+
                     if (pnlFlowHolder.ClientRectangle.Contains(PointToClient(docForm.Location)))
                     {
-                        DocumentViewHelper.ReleaseCapture();
-                        docForm.Location = Point.Empty;
-                        DocumentViewHelper.Dock(this, docForm as IDocumentView);
+                        DocumentHolderPanel.SuspendLayout();
+                        try
+                        {
+                            WindowsApi.ReleaseCapture();
+                            DocumentViewHelper.Dock(this, document);
+                        }
+                        finally
+                        {
+                            DocumentHolderPanel.ResumeLayout(true);
+                        }
                     }
-
-                    //docForm.DoDragDrop(docForm as IDocumentView, DragDropEffects.Move);
                 };
             docForm.Disposed += (s, e) => _registeredViews.Remove(docForm as IDocumentView);
 
             return true;
         }
 
-        private void WhenDragOver(object sender, DragEventArgs e)
+        // On 64-bit systems, SetWindowPos fails silently if the controls are nested too deeply.
+        // To fix this, we need to fire SizeChanged ourselves.
+        // More info: http://support.microsoft.com/kb/953934
+        protected override void OnSizeChanged(EventArgs e)
         {
-            if (e.Data.GetDataPresent(typeof(IDocumentView)))
-                e.Effect = DragDropEffects.Move;
-        }
-
-        private void WhenDropped(object sender, DragEventArgs e)
-        {
-            if (!e.Data.GetDataPresent(typeof(IDocumentView)))
-                return;
-
-            DocumentViewHelper.Dock(this, (IDocumentView)e.Data.GetData(typeof(IDocumentView)));
+            if (IsHandleCreated)
+            {
+                BeginInvoke((MethodInvoker)(() => base.OnSizeChanged(e)));
+            }
+            else
+                base.OnSizeChanged(e);
         }
     }
 }

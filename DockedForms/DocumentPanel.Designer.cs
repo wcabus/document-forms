@@ -81,8 +81,6 @@
             this.pnlFlowHolder.Name = "pnlFlowHolder";
             this.pnlFlowHolder.Size = new System.Drawing.Size(577, 21);
             this.pnlFlowHolder.TabIndex = 5;
-            this.pnlFlowHolder.DragDrop += new System.Windows.Forms.DragEventHandler(this.WhenDropped);
-            this.pnlFlowHolder.DragOver += new System.Windows.Forms.DragEventHandler(this.WhenDragOver);
             // 
             // DocumentButtonPanel
             // 

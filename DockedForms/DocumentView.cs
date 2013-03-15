@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Drawing;
+using System.Windows.Forms;
 
 namespace DocumentForms
 {
@@ -8,6 +9,9 @@ namespace DocumentForms
     public class DocumentView : Form, IDocumentView
     {
         private FormBorderStyle _originalBorderStyle;
+        private Font _originalFont;
+        private FormWindowState _originalState;
+        private bool _originalInTaskbar;
 
         /// <summary>
         /// Default constructor.
@@ -15,10 +19,15 @@ namespace DocumentForms
         public DocumentView()
         {
             _originalBorderStyle = base.FormBorderStyle;
+            _originalFont = base.Font;
+            _originalInTaskbar = base.ShowInTaskbar;
+            _originalState = base.WindowState;
         }
 
         public bool IsDocked { get; set; }
         public DocumentPanel ParentDocumentPanel { get; set; }
+
+        public bool IsDockingOrUndocking { get; set; }
 
         /// <summary>
         /// Gets or sets the border style of the Form.
@@ -45,9 +54,78 @@ namespace DocumentForms
             }
         }
 
+        /// <summary>
+        /// Gets or sets the font of the text displayed by the control.
+        /// </summary>
+        public new Font Font
+        {
+            get { return _originalFont; }
+            set
+            {
+                if (Equals(_originalFont, value))
+                    return;
+
+                _originalFont = value;
+
+                if (IsDocked)
+                    return; //do not overwrite the font if this Form is currently in a docked state.
+
+                base.Font = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether the form is minimized, maximized, or normal.
+        /// </summary>
+        public new FormWindowState WindowState
+        {
+            get { return _originalState; }
+            set
+            {
+                if (_originalState == value)
+                    return;
+
+                _originalState = value;
+                if (!IsDocked)
+                    base.WindowState = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the form is displayed in the Windows taskbar.
+        /// </summary>
+        public new bool ShowInTaskbar
+        {
+            get { return _originalInTaskbar; }
+            set
+            {
+                if (_originalInTaskbar == value)
+                    return;
+
+                _originalInTaskbar = value;
+                if (!IsDocked)
+                    base.ShowInTaskbar = value;
+            }
+        }
+
         public FormBorderStyle WindowBorderStyle
         {
             get { return _originalBorderStyle; }
+        }
+
+        public Font WindowFont
+        {
+            get { return _originalFont; }
+        }
+
+        public FormWindowState OriginalWindowState
+        {
+            get { return _originalState; }
+        }
+
+        public bool WindowInTaskbar
+        {
+            get { return _originalInTaskbar; }
         }
     }
 }

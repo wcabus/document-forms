@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>$version$</version>
+    <version>$version$-beta</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
@@ -10,7 +10,10 @@
     <projectUrl>http://documentforms.codeplex.com</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>- Moved all color references into an IColorTable interface, so you can define your own colorscheme.</releaseNotes>
+    <releaseNotes>
+      - Added the color of the DocumentPanel to the IColorTable interface, to allow you to change the background color of the DocumentPanel. This is shown when there are no documents docked.
+      - Fixed a bug in docking and undocking documents: the docked document is now always positioned correctly inside the DocumentPanel.
+    </releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>WinForms</tags>
   </metadata>
