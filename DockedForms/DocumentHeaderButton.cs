@@ -153,9 +153,10 @@ namespace DocumentForms
         private void WhenCloseClicked(object sender, EventArgs e)
         {
             var local = DocumentView;
-            local.Close(); //hides the form already, before Undock would pop it up.
+            local.Visible = false;  //hides the form already, before Undock would pop it up.
             DocumentViewHelper.Undock(DocumentView as IDocumentView); //sets DocumentView to null
 
+            local.Close();
             local.Dispose();
         }
     }

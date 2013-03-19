@@ -75,6 +75,7 @@ namespace DocumentForms
             button.ParentDocumentPanel = this;
 
             button.SizeChanged += (s, e) => RecalculateHeaderWidth();
+            docForm.FormClosed += WhenFormClosed;
 
             //Make the button active, this will select the document.
             SetActiveButton(button);
@@ -92,6 +93,9 @@ namespace DocumentForms
             DocumentHeaderButton button = _documentButtons.FirstOrDefault(b => b.DocumentView == documentView);
             if (button == null)
                 return;
+
+            Form docForm = documentView as Form;
+            docForm.FormClosed -= WhenFormClosed;
 
             //Remove the button from the header
             _documentButtons.Remove(button);
@@ -128,6 +132,9 @@ namespace DocumentForms
 
             //Make another button active.
             SetActiveButton(_previousDocument);
+
+            Form docForm = button.DocumentView as Form;
+            docForm.FormClosed -= WhenFormClosed;
 
             DocumentViewHelper.UndockView(button.DocumentView as IDocumentView);
         }
@@ -221,10 +228,20 @@ namespace DocumentForms
             if (local == null)
                 return;
 
+            local.FormClosed -= WhenFormClosed;
             local.Close();
             DocumentViewHelper.Undock(ActiveView);
 
             local.Dispose();
+        }
+
+        private void WhenFormClosed(object sender, EventArgs e)
+        {
+            Form docForm = sender as Form;
+            if (docForm == null)
+                return;
+
+            UndockDocument(docForm as IDocumentView);
         }
 
         /// <summary>

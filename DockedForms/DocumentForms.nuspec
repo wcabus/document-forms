@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>0.3.1-beta</version>
+    <version>0.3.2-beta</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
@@ -11,7 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-      - Bugfix: Sometimes, the DocumentPanel would not activate a remaining document when closing the active document.
+      - Bugfix: When a docked document is closed, it's button in the DocumentPanel will also disappear now.
     </releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>WinForms</tags>
