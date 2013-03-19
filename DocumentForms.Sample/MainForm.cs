@@ -20,9 +20,13 @@ namespace DocumentForms.Sample
             DocumentViewHelper.RegisterView(documentPanel1, cf);
             DocumentViewHelper.Dock(documentPanel1, cf);
 
-            ChildForm2 cf2 = new ChildForm2();
-            DocumentViewHelper.RegisterView(documentPanel1, cf2);
-            DocumentViewHelper.Dock(documentPanel1, cf2);
+            int i = 0;
+            while (i++ < 50)
+            {
+                ChildForm2 cf2 = new ChildForm2(i);
+                DocumentViewHelper.RegisterView(documentPanel1, cf2);
+                DocumentViewHelper.Dock(documentPanel1, cf2);
+            }
         }
 
         private void child1ToolStripMenuItem_Click(object sender, EventArgs e)

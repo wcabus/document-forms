@@ -46,6 +46,10 @@ namespace DocumentForms
         {
             _mouseState &= ~MouseState.MouseDown;
             Invalidate();
+
+            if (e.Button == MouseButtons.Right)
+                OnClick(e); //Raise click event also when right-clicking
+
             base.OnMouseUp(e);
         }
 

@@ -45,7 +45,6 @@
             this.pnlFill.Name = "pnlFill";
             this.pnlFill.Size = new System.Drawing.Size(77, 18);
             this.pnlFill.TabIndex = 0;
-            this.pnlFill.Click += new System.EventHandler(this.WhenButtonClick);
             this.pnlFill.MouseDown += new System.Windows.Forms.MouseEventHandler(this.WhenMouseDown);
             this.pnlFill.MouseEnter += new System.EventHandler(this.WhenButtonMouseEnter);
             this.pnlFill.MouseLeave += new System.EventHandler(this.WhenButtonMouseLeave);
@@ -80,7 +79,6 @@
             this.lblDocumentText.Size = new System.Drawing.Size(53, 13);
             this.lblDocumentText.TabIndex = 2;
             this.lblDocumentText.Text = "ChildForm";
-            this.lblDocumentText.Click += new System.EventHandler(this.WhenButtonClick);
             this.lblDocumentText.MouseDown += new System.Windows.Forms.MouseEventHandler(this.WhenMouseDown);
             this.lblDocumentText.MouseEnter += new System.EventHandler(this.WhenButtonMouseEnter);
             this.lblDocumentText.MouseLeave += new System.EventHandler(this.WhenButtonMouseLeave);

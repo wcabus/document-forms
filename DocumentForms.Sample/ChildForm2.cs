@@ -16,5 +16,11 @@ namespace DocumentForms.Sample
         {
             InitializeComponent();
         }
+
+        public ChildForm2(int index) : this()
+        {
+            Text = string.Format("Instance {0}", index);
+            label1.Text = string.Format("This is form 2, instance {0}", index);
+        }
     }
 }

@@ -33,6 +33,9 @@ namespace DocumentForms
             btnShowViews.ParentPanel = this;
 
             Renderer = new DocumentPanelDefaultRenderer();
+
+            btnScrollLeft.Click += (s, e) => ScrollToButton(-1);
+            btnScrollRight.Click += (s, e) => ScrollToButton(1);
         }
 
         private int GetNextButtonPosition()
@@ -67,6 +70,11 @@ namespace DocumentForms
                     Location = new Point(GetNextButtonPosition(), 0),
                     DocumentView = docForm
                 };
+
+            button.ContextMenuStrip = buttonContextMenu;
+            var mnuActivateButton = new ToolStripMenuItem(button.Text);
+            button.ToolStripMenuItem = mnuActivateButton;
+            viewMenuStrip.Items.Add(mnuActivateButton);
 
             //Add the button to the button panel
             _documentButtons.Add(button);
@@ -150,23 +158,40 @@ namespace DocumentForms
             if (otherButton != null)
                 otherButton.IsActive = false;
 
-            if (button == null)
+            if (button == null || button.IsDisposed)
             {
                 //Get the last document button
                 if (_documentButtons.Any())
                     button = _documentButtons.Last();
             }
 
-            if (button == null || !(button.DocumentView as IDocumentView).IsDocked)
+            if (button == null || button.IsDisposed || !(button.DocumentView as IDocumentView).IsDocked)
                 return;
 
             button.ParentDocumentPanel = this;
             button.IsActive = true;
 
-            //set the form in the bottom control
-            DocumentHolderPanel.Controls.Clear();
-            DocumentHolderPanel.Controls.Add(button.DocumentView);
-            button.DocumentView.Show(); //makes sure that it's visible
+            //Ensure that this button is visible in the button panel
+            var loc = button.Location;
+            loc.Offset(DocumentButtonPanel.Location);
+
+            if (loc.X < 0)
+                DocumentButtonPanel.Location = new Point(-button.Location.X, 0);
+            else if (loc.X + button.Width > pnlFlowHolder.Width)
+                DocumentButtonPanel.Location = new Point(-button.Location.X + (pnlFlowHolder.Width - button.Width), 0);
+
+            //Set the form in the bottom control
+            DocumentHolderPanel.SuspendLayout();
+            try
+            {
+                DocumentHolderPanel.Controls.Clear();
+                DocumentHolderPanel.Controls.Add(button.DocumentView);
+                button.DocumentView.Show(); //Makes sure that the document is visible
+            }
+            finally
+            {
+                DocumentHolderPanel.ResumeLayout(true);
+            }
         }
 
         /// <summary>
@@ -219,6 +244,12 @@ namespace DocumentForms
             Renderer.DrawHeader(new HeaderRenderEventArgs(e.Graphics, HeaderPanel, e.ClipRectangle, Renderer.ColorTable.DocumentTabBackground, Renderer.ColorTable.DocumentTabBottomBackground));
         }
 
+        /// <summary>
+        /// Handles when the user clicks the DocumentPanel's close button.
+        /// This button closes the currently active document.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void WhenCloseClicked(object sender, EventArgs e)
         {
             if (ActiveView == null) 
@@ -289,6 +320,23 @@ namespace DocumentForms
             return true;
         }
 
+        /// <summary>
+        /// Scrolls to the next button and brings it into the view.
+        /// </summary>
+        /// <param name="relativePosition">-1 to scroll left, 1 to scroll right.</param>
+        private void ScrollToButton(int relativePosition)
+        {
+            if (!_documentButtons.Any())
+                return;
+
+            var activeButton = _documentButtons.First(b => b.IsActive);
+            var newPos = _documentButtons.IndexOf(activeButton) + relativePosition;
+            if (newPos < 0 || newPos >= _documentButtons.Count)
+                return;
+
+            SetActiveButton(_documentButtons[newPos]);
+        }
+
         // On 64-bit systems, SetWindowPos fails silently if the controls are nested too deeply.
         // To fix this, we need to fire SizeChanged ourselves.
         // More info: http://support.microsoft.com/kb/953934
@@ -300,6 +348,65 @@ namespace DocumentForms
             }
             else
                 base.OnSizeChanged(e);
+        }
+
+        /// <summary>
+        /// User clicked the "Close Document" menu item of the context menu.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WhenCloseContextClicked(object sender, EventArgs e)
+        {
+            WhenCloseClicked(sender, e);
+        }
+
+        private void WhenCloseAllButThisClicked(object sender, EventArgs e)
+        {
+            CloseAllDocumentsWhere(b => !b.IsActive);
+            SuspendLayout();
+            try
+            {
+                //Reposition the panel and the remaining button.
+                _documentButtons.First().Location = Point.Empty;
+                DocumentButtonPanel.Location = Point.Empty;
+            }
+            finally
+            {
+                ResumeLayout(true);
+            }
+        }
+
+        private void WhenCloseAllClicked(object sender, EventArgs e)
+        {
+            CloseAllDocumentsWhere(b => true);
+        }
+
+        private void CloseAllDocumentsWhere(Predicate<DocumentHeaderButton> whereClause)
+        {
+            SuspendLayout();
+            try
+            {
+                foreach (var button in _documentButtons.Where(b => whereClause(b)))
+                {
+                    button.DocumentView.FormClosed -= WhenFormClosed;
+                    button.DocumentView.Close();
+                    button.DocumentView.Dispose();
+
+                    button.Dispose();
+                }
+                _documentButtons.RemoveAll(whereClause);
+            }
+            finally
+            {
+                ResumeLayout(true);
+            }
+        }
+
+        private void OpenViewMenu(object sender, EventArgs e)
+        {
+            Point position = btnShowViews.Location;
+            position.Offset(0, btnShowViews.Height);
+            viewMenuStrip.Show(btnShowViews, position);
         }
     }
 }

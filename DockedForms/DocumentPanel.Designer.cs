@@ -28,17 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.DocumentHolderPanel = new System.Windows.Forms.Panel();
             this.HeaderPanel = new System.Windows.Forms.Panel();
             this.pnlFlowHolder = new System.Windows.Forms.Panel();
             this.DocumentButtonPanel = new System.Windows.Forms.Panel();
             this.pnlScrollRight = new System.Windows.Forms.Panel();
-            this.btnScrollRight = new DocumentForms.FlatButton();
             this.pnlCloseActiveView = new System.Windows.Forms.Panel();
-            this.btnCloseActiveView = new DocumentForms.FlatButton();
             this.pnlShowAllViews = new System.Windows.Forms.Panel();
-            this.btnShowViews = new DocumentForms.FlatButton();
             this.ScrollLeftPanel = new System.Windows.Forms.Panel();
+            this.buttonContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.btnCloseActiveViewFromMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnCloseAllDocs = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnCloseAllButActive = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.btnScrollRight = new DocumentForms.FlatButton();
+            this.btnCloseActiveView = new DocumentForms.FlatButton();
+            this.btnShowViews = new DocumentForms.FlatButton();
             this.btnScrollLeft = new DocumentForms.FlatButton();
             this.HeaderPanel.SuspendLayout();
             this.pnlFlowHolder.SuspendLayout();
@@ -46,6 +52,7 @@
             this.pnlCloseActiveView.SuspendLayout();
             this.pnlShowAllViews.SuspendLayout();
             this.ScrollLeftPanel.SuspendLayout();
+            this.buttonContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // DocumentHolderPanel
@@ -100,17 +107,6 @@
             this.pnlScrollRight.Size = new System.Drawing.Size(18, 21);
             this.pnlScrollRight.TabIndex = 4;
             // 
-            // btnScrollRight
-            // 
-            this.btnScrollRight.ArrowDirection = System.Windows.Forms.ArrowDirection.Right;
-            this.btnScrollRight.IsArrowButton = true;
-            this.btnScrollRight.IsCloseButton = false;
-            this.btnScrollRight.Location = new System.Drawing.Point(0, 3);
-            this.btnScrollRight.Name = "btnScrollRight";
-            this.btnScrollRight.ParentPanel = null;
-            this.btnScrollRight.Size = new System.Drawing.Size(15, 15);
-            this.btnScrollRight.TabIndex = 0;
-            // 
             // pnlCloseActiveView
             // 
             this.pnlCloseActiveView.BackColor = System.Drawing.Color.Transparent;
@@ -121,6 +117,73 @@
             this.pnlCloseActiveView.Size = new System.Drawing.Size(18, 21);
             this.pnlCloseActiveView.TabIndex = 3;
             this.pnlCloseActiveView.Visible = false;
+            // 
+            // pnlShowAllViews
+            // 
+            this.pnlShowAllViews.BackColor = System.Drawing.Color.Transparent;
+            this.pnlShowAllViews.Controls.Add(this.btnShowViews);
+            this.pnlShowAllViews.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pnlShowAllViews.Location = new System.Drawing.Point(631, 0);
+            this.pnlShowAllViews.Name = "pnlShowAllViews";
+            this.pnlShowAllViews.Size = new System.Drawing.Size(18, 21);
+            this.pnlShowAllViews.TabIndex = 2;
+            // 
+            // ScrollLeftPanel
+            // 
+            this.ScrollLeftPanel.BackColor = System.Drawing.Color.Transparent;
+            this.ScrollLeftPanel.Controls.Add(this.btnScrollLeft);
+            this.ScrollLeftPanel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.ScrollLeftPanel.Location = new System.Drawing.Point(0, 0);
+            this.ScrollLeftPanel.Name = "ScrollLeftPanel";
+            this.ScrollLeftPanel.Size = new System.Drawing.Size(18, 21);
+            this.ScrollLeftPanel.TabIndex = 1;
+            // 
+            // buttonContextMenu
+            // 
+            this.buttonContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnCloseActiveViewFromMenu,
+            this.btnCloseAllDocs,
+            this.btnCloseAllButActive});
+            this.buttonContextMenu.Name = "buttonContextMenu";
+            this.buttonContextMenu.Size = new System.Drawing.Size(185, 70);
+            // 
+            // btnCloseActiveViewFromMenu
+            // 
+            this.btnCloseActiveViewFromMenu.Name = "btnCloseActiveViewFromMenu";
+            this.btnCloseActiveViewFromMenu.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F4)));
+            this.btnCloseActiveViewFromMenu.Size = new System.Drawing.Size(184, 22);
+            this.btnCloseActiveViewFromMenu.Text = "&Close";
+            this.btnCloseActiveViewFromMenu.Click += new System.EventHandler(this.WhenCloseContextClicked);
+            // 
+            // btnCloseAllDocs
+            // 
+            this.btnCloseAllDocs.Name = "btnCloseAllDocs";
+            this.btnCloseAllDocs.Size = new System.Drawing.Size(184, 22);
+            this.btnCloseAllDocs.Text = "Close &All Documents";
+            this.btnCloseAllDocs.Click += new System.EventHandler(this.WhenCloseAllClicked);
+            // 
+            // btnCloseAllButActive
+            // 
+            this.btnCloseAllButActive.Name = "btnCloseAllButActive";
+            this.btnCloseAllButActive.Size = new System.Drawing.Size(184, 22);
+            this.btnCloseAllButActive.Text = "Close All But &This";
+            this.btnCloseAllButActive.Click += new System.EventHandler(this.WhenCloseAllButThisClicked);
+            // 
+            // viewMenuStrip
+            // 
+            this.viewMenuStrip.Name = "viewMenuStrip";
+            this.viewMenuStrip.Size = new System.Drawing.Size(61, 4);
+            // 
+            // btnScrollRight
+            // 
+            this.btnScrollRight.ArrowDirection = System.Windows.Forms.ArrowDirection.Right;
+            this.btnScrollRight.IsArrowButton = true;
+            this.btnScrollRight.IsCloseButton = false;
+            this.btnScrollRight.Location = new System.Drawing.Point(0, 3);
+            this.btnScrollRight.Name = "btnScrollRight";
+            this.btnScrollRight.ParentPanel = null;
+            this.btnScrollRight.Size = new System.Drawing.Size(15, 15);
+            this.btnScrollRight.TabIndex = 0;
             // 
             // btnCloseActiveView
             // 
@@ -134,16 +197,6 @@
             this.btnCloseActiveView.TabIndex = 1;
             this.btnCloseActiveView.Click += new System.EventHandler(this.WhenCloseClicked);
             // 
-            // pnlShowAllViews
-            // 
-            this.pnlShowAllViews.BackColor = System.Drawing.Color.Transparent;
-            this.pnlShowAllViews.Controls.Add(this.btnShowViews);
-            this.pnlShowAllViews.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlShowAllViews.Location = new System.Drawing.Point(631, 0);
-            this.pnlShowAllViews.Name = "pnlShowAllViews";
-            this.pnlShowAllViews.Size = new System.Drawing.Size(18, 21);
-            this.pnlShowAllViews.TabIndex = 2;
-            // 
             // btnShowViews
             // 
             this.btnShowViews.ArrowDirection = System.Windows.Forms.ArrowDirection.Down;
@@ -154,16 +207,7 @@
             this.btnShowViews.ParentPanel = null;
             this.btnShowViews.Size = new System.Drawing.Size(15, 15);
             this.btnShowViews.TabIndex = 1;
-            // 
-            // ScrollLeftPanel
-            // 
-            this.ScrollLeftPanel.BackColor = System.Drawing.Color.Transparent;
-            this.ScrollLeftPanel.Controls.Add(this.btnScrollLeft);
-            this.ScrollLeftPanel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.ScrollLeftPanel.Location = new System.Drawing.Point(0, 0);
-            this.ScrollLeftPanel.Name = "ScrollLeftPanel";
-            this.ScrollLeftPanel.Size = new System.Drawing.Size(18, 21);
-            this.ScrollLeftPanel.TabIndex = 1;
+            this.btnShowViews.Click += new System.EventHandler(this.OpenViewMenu);
             // 
             // btnScrollLeft
             // 
@@ -190,6 +234,7 @@
             this.pnlCloseActiveView.ResumeLayout(false);
             this.pnlShowAllViews.ResumeLayout(false);
             this.ScrollLeftPanel.ResumeLayout(false);
+            this.buttonContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -208,5 +253,10 @@
         private FlatButton btnShowViews;
         private FlatButton btnScrollLeft;
         private System.Windows.Forms.Panel DocumentButtonPanel;
+        private System.Windows.Forms.ContextMenuStrip buttonContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem btnCloseActiveViewFromMenu;
+        private System.Windows.Forms.ToolStripMenuItem btnCloseAllDocs;
+        private System.Windows.Forms.ToolStripMenuItem btnCloseAllButActive;
+        private System.Windows.Forms.ContextMenuStrip viewMenuStrip;
     }
 }

@@ -51,6 +51,8 @@ namespace DocumentForms
         {
             //Update the text on the button
             lblDocumentText.Text = _documentView.Text;
+            if (_toolStripMenuItem != null)
+                _toolStripMenuItem.Text = _documentView.Text;
 
             //Resize the button
             int textWidth = TextRenderer.MeasureText(lblDocumentText.Text, lblDocumentText.Font).Width;
@@ -108,6 +110,20 @@ namespace DocumentForms
             } 
         }
 
+        internal ToolStripMenuItem ToolStripMenuItem
+        {
+            get { return _toolStripMenuItem; }
+            set
+            {
+                if (_toolStripMenuItem == value)
+                    return;
+
+                _toolStripMenuItem = value;
+                if (_toolStripMenuItem != null)
+                    _toolStripMenuItem.Click += (s, e) => ParentDocumentPanel.SetActiveButton(this);
+            }
+        }
+
         private void WhenButtonMouseEnter(object sender, EventArgs e)
         {
             IsMouseHover = true;
@@ -117,13 +133,9 @@ namespace DocumentForms
         {
             IsMouseHover = false;
         }
-
-        private void WhenButtonClick(object sender, EventArgs e)
-        {
-            ParentDocumentPanel.SetActiveButton(this);
-        }
-
+        
         private Point _dragStartPos = Point.Empty;
+        private ToolStripMenuItem _toolStripMenuItem;
 
         // When moving the button while the left mouse button is pressed, undock the window
         // if the user drags away for a certain amount of pixels.
@@ -135,6 +147,8 @@ namespace DocumentForms
 
         private void WhenMouseUp(object sender, MouseEventArgs e)
         {
+            ParentDocumentPanel.SetActiveButton(this);
+
             if (e.Button == MouseButtons.Left)
                 _dragStartPos = Point.Empty;
         }

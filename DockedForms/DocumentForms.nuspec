@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>0.3.2-beta</version>
+    <version>0.3.3-beta</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
@@ -11,7 +11,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-      - Bugfix: When a docked document is closed, it's button in the DocumentPanel will also disappear now.
+      - Finally added support for scrolling using the arrow buttons
+      - The menu button also works now: it displays a list of all documents
+      - Right-clicking a document button will display a context menu. This menu allows you to close the document, close all documents or close all but the current document.
     </releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>WinForms</tags>
