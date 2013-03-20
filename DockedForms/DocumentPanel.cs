@@ -113,11 +113,13 @@ namespace DocumentForms
             DocumentHolderPanel.Controls.Clear();
 
             //Dispose the button
+            viewMenuStrip.Items.Remove(button.ToolStripMenuItem);
             button.ParentDocumentPanel = null;
             button.DocumentView = null;
             if (_previousDocument == button)
                 _previousDocument = null;
 
+            button.ToolStripMenuItem.Dispose();
             button.Dispose();
 
             //Make another button active.
@@ -130,6 +132,7 @@ namespace DocumentForms
 
             //Remove the button to the button panel
             _documentButtons.Remove(button);
+            viewMenuStrip.Items.Remove(button.ToolStripMenuItem);
             DocumentButtonPanel.Controls.Remove(button);
             RecalculateHeaderWidth();
 
@@ -145,6 +148,13 @@ namespace DocumentForms
             docForm.FormClosed -= WhenFormClosed;
 
             DocumentViewHelper.UndockView(button.DocumentView as IDocumentView);
+
+            //Dispose the button
+            button.ParentDocumentPanel = null;
+            button.DocumentView = null;
+
+            button.ToolStripMenuItem.Dispose();
+            button.Dispose();
         }
 
         internal void SetActiveButton(DocumentHeaderButton button)
@@ -392,6 +402,11 @@ namespace DocumentForms
                     button.DocumentView.Close();
                     button.DocumentView.Dispose();
 
+                    viewMenuStrip.Items.Remove(button.ToolStripMenuItem);
+                    button.ParentDocumentPanel = null;
+                    button.DocumentView = null;
+
+                    button.ToolStripMenuItem.Dispose();
                     button.Dispose();
                 }
                 _documentButtons.RemoveAll(whereClause);

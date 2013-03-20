@@ -76,6 +76,13 @@ namespace DocumentForms
                                                 ? ParentDocumentPanel.Renderer.ColorTable.ActiveDocumentTabForeground
                                                 : ParentDocumentPanel.Renderer.ColorTable.InactiveDocumentTabForeground;
 
+                if (_toolStripMenuItem != null)
+                {
+                    _toolStripMenuItem.Font = _isActive
+                                                  ? new Font(_toolStripMenuItem.Font, FontStyle.Bold)
+                                                  : new Font(_toolStripMenuItem.Font, FontStyle.Regular);
+                }
+
                 UpdateButtonText(); //font has changed, resize the button accordingly
             }
         }
