@@ -10,23 +10,20 @@ namespace DocumentForms
     public static class DocumentViewHelper
     {
         /// <summary>
-        /// Docks the <paramref name="documentView"/> inside the <paramref name="documentPanel"/>.
+        /// Docks the <paramref name="documentView"/> inside a <see cref="DocumentPanel"/>.
         /// If the <paramref name="documentView"/> has already been docked, this method undocks it first.
         /// This allows you to easily move the <paramref name="documentView"/> between different <see cref="DocumentPanel"/> instances.
         /// </summary>
-        /// <param name="documentPanel"></param>
         /// <param name="documentView"></param>
-        /// <exception cref="ArgumentNullException">Thrown if either <paramref name="documentPanel"/> or <paramref name="documentView"/> is a null reference.</exception>
-        public static void Dock(DocumentPanel documentPanel, IDocumentView documentView)
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="documentView"/> is a null reference.</exception>
+        /// <exception cref="InvalidOperationException">Thrown if the view is already docked.</exception>
+        public static void Dock<TView>(TView documentView) where TView : Form, IDocumentView
         {
-            if (documentPanel == null)
-                throw new ArgumentNullException("documentPanel");
-
             if (documentView == null)
                 throw new ArgumentNullException("documentView");
 
             if (documentView.IsDocked)
-                Undock(documentView); //Undock from the panel: this removes the button from the header
+                throw new InvalidOperationException("Cannot dock a view that is already docked.");
 
             documentView.IsDockingOrUndocking = true;
 
@@ -36,24 +33,20 @@ namespace DocumentForms
                 documentView.IsDocked = true;
 
                 //Set Form-specific properties to make it appear docked.
-                Form docForm = documentView as Form;
-                if (docForm != null)
-                {
-                    docForm.TopLevel = false;
-                    docForm.FormBorderStyle = FormBorderStyle.None;
-                    docForm.ShowInTaskbar = false;
-                    docForm.Dock = DockStyle.Fill;
-                    docForm.WindowState = FormWindowState.Normal;
+                documentView.TopLevel = false;
+                documentView.FormBorderStyle = FormBorderStyle.None;
+                documentView.ShowInTaskbar = false;
+                documentView.Dock = DockStyle.Fill;
+                documentView.WindowState = FormWindowState.Normal;
 
-                    WindowsApi.SetWindowPos(docForm.Handle, IntPtr.Zero, 0, 0, 0, 0,
-                                            SetWindowPosFlags.SwpNoActivate | SetWindowPosFlags.SwpNoMove |
-                                            SetWindowPosFlags.SwpNoSize |
-                                            SetWindowPosFlags.SwpNoZOrder | SetWindowPosFlags.SwpNoOwnerZOrder |
-                                            SetWindowPosFlags.SwpFrameChanged);
-                }
+                WindowsApi.SetWindowPos(documentView.Handle, IntPtr.Zero, 0, 0, 0, 0,
+                                        SetWindowPosFlags.SwpNoActivate | SetWindowPosFlags.SwpNoMove |
+                                        SetWindowPosFlags.SwpNoSize |
+                                        SetWindowPosFlags.SwpNoZOrder | SetWindowPosFlags.SwpNoOwnerZOrder |
+                                        SetWindowPosFlags.SwpFrameChanged);
 
-                documentView.ParentDocumentPanel = documentPanel;
-                documentPanel.DockDocument(documentView);
+
+                documentView.DocumentPanel.DockDocument(documentView);
             }
             finally
             {
@@ -98,7 +91,7 @@ namespace DocumentForms
                 if (!isDragging)
                 {
                     //Undock from the panel: this removes the button from the header
-                    documentView.ParentDocumentPanel.UndockDocument(documentView);
+                    documentView.DocumentPanel.UndockDocument(documentView as Form);
                 }
 
                 //Update the status on the view
@@ -152,7 +145,7 @@ namespace DocumentForms
         /// <param name="view"></param>
         /// <returns>True if registration is successfull, false otherwhise.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="documentPanel"/> or <paramref name="view"/> is a null reference.</exception>
-        public static bool RegisterView(DocumentPanel documentPanel, IDocumentView view)
+        public static bool RegisterView<TView>(DocumentPanel documentPanel, TView view) where TView : Form, IDocumentView
         {
             if (documentPanel == null)
                 throw new ArgumentNullException("documentPanel");

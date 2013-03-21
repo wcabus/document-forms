@@ -72,6 +72,7 @@
     </Compile>
     <Compile Include="HeaderRenderEventArgs.cs" />
     <Compile Include="IColorTable.cs" />
+    <Compile Include="IDocumentHeaderButton.cs" />
     <Compile Include="IDocumentView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RenderEventArgs.cs" />

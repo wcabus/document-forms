@@ -30,6 +30,7 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.btnSpawn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -53,11 +54,23 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // btnSpawn
+            // 
+            this.btnSpawn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSpawn.Location = new System.Drawing.Point(12, 12);
+            this.btnSpawn.Name = "btnSpawn";
+            this.btnSpawn.Size = new System.Drawing.Size(75, 23);
+            this.btnSpawn.TabIndex = 2;
+            this.btnSpawn.Text = "&New child";
+            this.btnSpawn.UseVisualStyleBackColor = true;
+            this.btnSpawn.Click += new System.EventHandler(this.btnSpawn_Click);
+            // 
             // ChildForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Controls.Add(this.btnSpawn);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
             this.Name = "ChildForm";
@@ -70,5 +83,6 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnSpawn;
     }
 }

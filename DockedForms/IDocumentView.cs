@@ -9,7 +9,7 @@ namespace DocumentForms
     public interface IDocumentView
     {
         /// <summary>
-        /// Gets or sets if the Form is docked inside a <see cref="DocumentPanel"/> or not.
+        /// Gets or sets if the Form is docked inside a <see cref="DocumentForms.DocumentPanel"/> or not.
         /// </summary>
         bool IsDocked { get; set; }
 
@@ -19,10 +19,10 @@ namespace DocumentForms
         bool IsDockingOrUndocking { get; set; }
 
         /// <summary>
-        /// Gets the <see cref="DocumentPanel"/> that currently contains this IDocumentView.
+        /// Gets the <see cref="DocumentForms.DocumentPanel"/> that is associated with this <see cref="IDocumentView"/>.
         /// </summary>
-        /// <returns>A null reference if the current IDocumentView is not docked.</returns>
-        DocumentPanel ParentDocumentPanel { get; set; }
+        /// <returns></returns>
+        DocumentPanel DocumentPanel { get; set; }
 
         /// <summary>
         /// Gets the <see cref="FormBorderStyle"/> used when the view is shown as a window.
@@ -40,8 +40,20 @@ namespace DocumentForms
         FormWindowState OriginalWindowState { get; }
 
         /// <summary>
-        /// Gets 
+        /// Gets if the window should show a button in the Windows Taskbar when the view is shown as a window.
         /// </summary>
         bool WindowInTaskbar { get; }
+
+        /// <summary>
+        /// Shows the view.
+        /// </summary>
+        /// <param name="startDocked">
+        /// When this parameter is true, the view will be shown docked inside the <see cref="DocumentForms.DocumentPanel"/>.
+        /// Else, it will be docked if <paramref name="currentView"/> is docked, or undocked if <paramref name="currentView"/> is not docked.
+        /// </param>
+        /// <param name="currentView">
+        /// If this parameter is null, the view will be docked by default.
+        /// </param>
+        void Show(bool startDocked, IDocumentView currentView);
     }
 }

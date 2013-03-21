@@ -12,35 +12,40 @@ namespace DocumentForms.Sample
 {
     public partial class MainForm : Form
     {
+        private static MainForm _instance;
+ 
         public MainForm()
         {
             InitializeComponent();
+            _instance = this;
 
             ChildForm cf = new ChildForm();
             DocumentViewHelper.RegisterView(documentPanel1, cf);
-            DocumentViewHelper.Dock(documentPanel1, cf);
+            DocumentViewHelper.Dock(cf);
 
             int i = 0;
             while (i++ < 50)
             {
                 ChildForm2 cf2 = new ChildForm2(i);
                 DocumentViewHelper.RegisterView(documentPanel1, cf2);
-                DocumentViewHelper.Dock(documentPanel1, cf2);
+                DocumentViewHelper.Dock(cf2);
             }
         }
+
+        public static MainForm Instance { get { return _instance; } }
 
         private void child1ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChildForm cf = new ChildForm();
             DocumentViewHelper.RegisterView(documentPanel1, cf);
-            DocumentViewHelper.Dock(documentPanel1, cf);
+            DocumentViewHelper.Dock(cf);
         }
 
         private void child2ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChildForm2 cf2 = new ChildForm2();
             DocumentViewHelper.RegisterView(documentPanel1, cf2);
-            DocumentViewHelper.Dock(documentPanel1, cf2);
+            DocumentViewHelper.Dock(cf2);
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)

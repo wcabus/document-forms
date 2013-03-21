@@ -13,12 +13,12 @@ namespace DocumentForms
     /// </summary>
     public partial class DocumentPanel : UserControl
     {
-        private readonly List<DocumentHeaderButton> _documentButtons = new List<DocumentHeaderButton>();
+        private readonly List<IDocumentHeaderButton> _documentButtons = new List<IDocumentHeaderButton>();
         private readonly List<IDocumentView> _registeredViews = new List<IDocumentView>();
 
         private DocumentPanelRenderer _renderer;
 
-        private DocumentHeaderButton _previousDocument = null;
+        private IDocumentHeaderButton _previousDocument = null;
 
         /// <summary>
         /// Default constructor
@@ -59,19 +59,18 @@ namespace DocumentForms
         /// Docks the given <paramref name="documentView"/> into this DocumentPanel.
         /// </summary>
         /// <param name="documentView"></param>
-        public void DockDocument(IDocumentView documentView)
+        public void DockDocument<TView>(TView documentView) where TView : Form, IDocumentView
         {
-            Form docForm = documentView as Form;
-            docForm.Font = Font;
+            documentView.Font = Font;
 
             //Create a header button
-            DocumentHeaderButton button = new DocumentHeaderButton
+            var button = new DocumentHeaderButton<TView>
                 {
                     Location = new Point(GetNextButtonPosition(), 0),
-                    DocumentView = docForm
+                    DocumentView = documentView,
+                    ContextMenuStrip = buttonContextMenu
                 };
 
-            button.ContextMenuStrip = buttonContextMenu;
             var mnuActivateButton = new ToolStripMenuItem(button.Text);
             button.ToolStripMenuItem = mnuActivateButton;
             viewMenuStrip.Items.Add(mnuActivateButton);
@@ -83,7 +82,7 @@ namespace DocumentForms
             button.ParentDocumentPanel = this;
 
             button.SizeChanged += (s, e) => RecalculateHeaderWidth();
-            docForm.FormClosed += WhenFormClosed;
+            documentView.FormClosed += WhenFormClosed;
 
             //Make the button active, this will select the document.
             SetActiveButton(button);
@@ -93,21 +92,20 @@ namespace DocumentForms
         /// Undocks the given <paramref name="documentView"/> from this DocumentPanel.
         /// </summary>
         /// <param name="documentView"></param>
-        public void UndockDocument(IDocumentView documentView)
+        public void UndockDocument(Form documentView)
         {
             //Note: this method does not unregister the view: it can still be docked!.
 
             //Find the button for this view
-            DocumentHeaderButton button = _documentButtons.FirstOrDefault(b => b.DocumentView == documentView);
+            var button = _documentButtons.FirstOrDefault(b => b.OwnedForm == documentView);
             if (button == null)
                 return;
 
-            Form docForm = documentView as Form;
-            docForm.FormClosed -= WhenFormClosed;
+            documentView.FormClosed -= WhenFormClosed;
 
             //Remove the button from the header
             _documentButtons.Remove(button);
-            DocumentButtonPanel.Controls.Remove(button);
+            DocumentButtonPanel.Controls.Remove(button as Control);
             RecalculateHeaderWidth();
 
             DocumentHolderPanel.Controls.Clear();
@@ -115,7 +113,7 @@ namespace DocumentForms
             //Dispose the button
             viewMenuStrip.Items.Remove(button.ToolStripMenuItem);
             button.ParentDocumentPanel = null;
-            button.DocumentView = null;
+            button.SetViewNull();
             if (_previousDocument == button)
                 _previousDocument = null;
 
@@ -126,14 +124,14 @@ namespace DocumentForms
             SetActiveButton(_previousDocument);
         }
 
-        internal void UndockButton(DocumentHeaderButton button)
+        internal void UndockButton(IDocumentHeaderButton button)
         {
             //Note: this method does not unregister the view: it can still be docked!
 
             //Remove the button to the button panel
             _documentButtons.Remove(button);
             viewMenuStrip.Items.Remove(button.ToolStripMenuItem);
-            DocumentButtonPanel.Controls.Remove(button);
+            DocumentButtonPanel.Controls.Remove(button as Control);
             RecalculateHeaderWidth();
 
             DocumentHolderPanel.Controls.Clear();
@@ -144,20 +142,20 @@ namespace DocumentForms
             //Make another button active.
             SetActiveButton(_previousDocument);
 
-            Form docForm = button.DocumentView as Form;
+            Form docForm = button.OwnedForm;
             docForm.FormClosed -= WhenFormClosed;
 
-            DocumentViewHelper.UndockView(button.DocumentView as IDocumentView);
+            DocumentViewHelper.UndockView(button.OwnedView);
 
             //Dispose the button
             button.ParentDocumentPanel = null;
-            button.DocumentView = null;
+            button.SetViewNull();
 
             button.ToolStripMenuItem.Dispose();
             button.Dispose();
         }
 
-        internal void SetActiveButton(DocumentHeaderButton button)
+        internal void SetActiveButton(IDocumentHeaderButton button)
         {
             //deactivate all other buttons
             var otherButton = _documentButtons.FirstOrDefault(b => b.IsActive);
@@ -168,14 +166,14 @@ namespace DocumentForms
             if (otherButton != null)
                 otherButton.IsActive = false;
 
-            if (button == null || button.IsDisposed)
+            if (button == null || (button as Control).IsDisposed)
             {
                 //Get the last document button
                 if (_documentButtons.Any())
                     button = _documentButtons.Last();
             }
 
-            if (button == null || button.IsDisposed || !(button.DocumentView as IDocumentView).IsDocked)
+            if (button == null || (button as Control).IsDisposed || !(button.OwnedView).IsDocked)
                 return;
 
             button.ParentDocumentPanel = this;
@@ -195,8 +193,8 @@ namespace DocumentForms
             try
             {
                 DocumentHolderPanel.Controls.Clear();
-                DocumentHolderPanel.Controls.Add(button.DocumentView);
-                button.DocumentView.Show(); //Makes sure that the document is visible
+                DocumentHolderPanel.Controls.Add(button.OwnedForm);
+                button.OwnedForm.Show(); //Makes sure that the document is visible
             }
             finally
             {
@@ -245,7 +243,7 @@ namespace DocumentForms
                 if (!_documentButtons.Any())
                     return null;
 
-                return _documentButtons.First(b => b.IsActive).DocumentView as IDocumentView;
+                return _documentButtons.First(b => b.IsActive).OwnedView;
             }
         }
 
@@ -282,7 +280,7 @@ namespace DocumentForms
             if (docForm == null)
                 return;
 
-            UndockDocument(docForm as IDocumentView);
+            UndockDocument(docForm);
         }
 
         /// <summary>
@@ -292,7 +290,7 @@ namespace DocumentForms
         /// <param name="view"></param>
         /// <returns>True if registration is successfull, false otherwhise (typically: it has already been registered).</returns>
         /// <exception cref="ArgumentNullException">Thrown if the <paramref name="view"/> is a null reference.</exception>
-        public bool RegisterViewForDocking(IDocumentView view)
+        public bool RegisterViewForDocking<TView>(TView view) where TView : Form, IDocumentView
         {
             if (view == null)
                 throw new ArgumentNullException("view");
@@ -300,24 +298,20 @@ namespace DocumentForms
             if (_registeredViews.Contains(view))
                 return false;
 
-            Form docForm = view as Form;
-            if (docForm == null)
-                return false;
-
             _registeredViews.Add(view);
-            docForm.Move += (s, e) =>
+            view.DocumentPanel = this;
+            view.Move += (s, e) =>
                 {
-                    IDocumentView document = docForm as IDocumentView;
-                    if (document.IsDockingOrUndocking)
+                    if (view.IsDockingOrUndocking)
                         return;
 
-                    if (pnlFlowHolder.ClientRectangle.Contains(PointToClient(docForm.Location)))
+                    if (pnlFlowHolder.ClientRectangle.Contains(PointToClient(view.Location)))
                     {
                         DocumentHolderPanel.SuspendLayout();
                         try
                         {
                             WindowsApi.ReleaseCapture();
-                            DocumentViewHelper.Dock(this, document);
+                            DocumentViewHelper.Dock(view);
                         }
                         finally
                         {
@@ -325,7 +319,7 @@ namespace DocumentForms
                         }
                     }
                 };
-            docForm.Disposed += (s, e) => _registeredViews.Remove(docForm as IDocumentView);
+            view.Disposed += (s, e) => _registeredViews.Remove(view);
 
             return true;
         }
@@ -391,20 +385,20 @@ namespace DocumentForms
             CloseAllDocumentsWhere(b => true);
         }
 
-        private void CloseAllDocumentsWhere(Predicate<DocumentHeaderButton> whereClause)
+        private void CloseAllDocumentsWhere(Predicate<IDocumentHeaderButton> whereClause)
         {
             SuspendLayout();
             try
             {
                 foreach (var button in _documentButtons.Where(b => whereClause(b)))
                 {
-                    button.DocumentView.FormClosed -= WhenFormClosed;
-                    button.DocumentView.Close();
-                    button.DocumentView.Dispose();
+                    button.OwnedForm.FormClosed -= WhenFormClosed;
+                    button.OwnedForm.Close();
+                    button.OwnedForm.Dispose();
 
                     viewMenuStrip.Items.Remove(button.ToolStripMenuItem);
                     button.ParentDocumentPanel = null;
-                    button.DocumentView = null;
+                    button.SetViewNull();
 
                     button.ToolStripMenuItem.Dispose();
                     button.Dispose();

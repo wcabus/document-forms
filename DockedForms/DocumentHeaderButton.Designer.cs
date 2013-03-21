@@ -1,6 +1,6 @@
 ﻿namespace DocumentForms
 {
-    partial class DocumentHeaderButton
+    partial class DocumentHeaderButton<TView> where TView : System.Windows.Forms.Form, IDocumentView
     {
         /// <summary> 
         /// Required designer variable.

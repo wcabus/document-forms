@@ -23,5 +23,13 @@ namespace DocumentForms.Sample
             Close();
         }
 
+        private void btnSpawn_Click(object sender, EventArgs e)
+        {
+            ChildForm2 cf2 = new ChildForm2();
+            DocumentViewHelper.RegisterView(MainForm.Instance.documentPanel1, cf2);
+            
+            cf2.Show(false, this);
+        }
+
     }
 }

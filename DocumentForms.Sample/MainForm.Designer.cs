@@ -115,7 +115,7 @@
 
         #endregion
 
-        private DocumentPanel documentPanel1;
+        internal DocumentPanel documentPanel1;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripDropDownButton toolStripButton1;
         private System.Windows.Forms.ToolStripMenuItem child1ToolStripMenuItem;

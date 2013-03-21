@@ -25,7 +25,7 @@ namespace DocumentForms
         }
 
         public bool IsDocked { get; set; }
-        public DocumentPanel ParentDocumentPanel { get; set; }
+        public DocumentPanel DocumentPanel { get; set; }
 
         public bool IsDockingOrUndocking { get; set; }
 
@@ -126,6 +126,22 @@ namespace DocumentForms
         public bool WindowInTaskbar
         {
             get { return _originalInTaskbar; }
+        }
+
+        public void Show(bool startDocked, IDocumentView currentView)
+        {
+            //This form will be docked if startDocked is true or either currentView is null or currentView exists and is docked.
+            bool docked = startDocked || currentView == null || currentView.IsDocked;
+
+            if (docked)
+                DockView();
+            else
+                Show();
+        }
+
+        private void DockView()
+        {
+            DocumentViewHelper.Dock(this);
         }
     }
 }

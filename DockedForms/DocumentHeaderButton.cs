@@ -8,12 +8,12 @@ namespace DocumentForms
     /// This control is a button that sits in the header part of a <see cref="DocumentPanel"/>.
     /// It allows selecting a docked <see cref="IDocumentView"/>, closing it and tearing it off.
     /// </summary>
-    internal partial class DocumentHeaderButton : UserControl
+    internal partial class DocumentHeaderButton<TView> : UserControl, IDocumentHeaderButton where TView : Form, IDocumentView
     {
         private bool _isActive;
         private bool _isMouseOver;
-        
-        private Form _documentView;
+
+        private TView _documentView;
         private DocumentPanel _parentDocumentPanel;
 
         public DocumentHeaderButton()
@@ -28,7 +28,7 @@ namespace DocumentForms
         /// Because the <see cref="DocumentHeaderButton"/> can only be created by <see cref="DocumentPanel"/> objects,
         /// we may assume that the DocumentView also implements the <see cref="IDocumentView"/> interface.
         /// </remarks>
-        public Form DocumentView
+        public TView DocumentView
         {
             get { return _documentView; }
             set { 
@@ -46,6 +46,9 @@ namespace DocumentForms
                 UpdateButtonText(); //And of course, update now.
             }
         }
+
+        public Form OwnedForm { get { return _documentView; } }
+        public IDocumentView OwnedView { get { return _documentView; } }
 
         private void UpdateButtonText()
         {
@@ -117,7 +120,7 @@ namespace DocumentForms
             } 
         }
 
-        internal ToolStripMenuItem ToolStripMenuItem
+        public ToolStripMenuItem ToolStripMenuItem
         {
             get { return _toolStripMenuItem; }
             set
@@ -175,10 +178,15 @@ namespace DocumentForms
         {
             var local = DocumentView;
             local.Visible = false;  //hides the form already, before Undock would pop it up.
-            DocumentViewHelper.Undock(DocumentView as IDocumentView); //sets DocumentView to null
+            DocumentViewHelper.Undock(DocumentView); //sets DocumentView to null
 
             local.Close();
             local.Dispose();
+        }
+
+        public void SetViewNull()
+        {
+            DocumentView = null;
         }
     }
 }
