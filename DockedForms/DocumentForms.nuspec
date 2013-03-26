@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>0.3.4-beta</version>
+    <version>0.4.0-beta</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
@@ -11,8 +11,10 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-      - The active document is also being tracked in the menu displaying all documents: its font is bold.
-      - Bugfix: closing a document didn't remove its entry in the menu.
+      - Bugfix: When the title of an undocked view was updated, an error could occur because the header button of that undocked view wanted to react to that event.
+      - Added a Show method to IDocumentView to enable docking child views based on the state of the parent view.
+      - Extracted a IDocumentHeaderButton interface to fix some issues introduced by using generics.
+      - Changed methods in DocumentPanel and DocumentViewHelper to use generics.
     </releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>WinForms</tags>

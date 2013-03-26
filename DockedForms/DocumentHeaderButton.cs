@@ -35,6 +35,9 @@ namespace DocumentForms
                 if (_documentView == value)
                     return;
 
+                if (_documentView != null)
+                    _documentView.TextChanged -= WhenUpdateButtonText;
+
                 _documentView = value;
                 if (value == null)
                     return;
@@ -42,13 +45,18 @@ namespace DocumentForms
                 btnClose.ParentPanel = ParentDocumentPanel;
 
                 //Make sure to update the button if the text of the document would change
-                _documentView.TextChanged += (s, e) => UpdateButtonText();
+                _documentView.TextChanged += WhenUpdateButtonText;
                 UpdateButtonText(); //And of course, update now.
             }
         }
 
         public Form OwnedForm { get { return _documentView; } }
         public IDocumentView OwnedView { get { return _documentView; } }
+
+        private void WhenUpdateButtonText(object sender, EventArgs e)
+        {
+            UpdateButtonText();
+        }
 
         private void UpdateButtonText()
         {
