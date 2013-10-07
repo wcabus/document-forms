@@ -45,6 +45,11 @@ namespace DocumentForms
         bool WindowInTaskbar { get; }
 
         /// <summary>
+        /// Gets if this window can be closed or not. 
+        /// </summary>
+        bool AllowClosing { get; }
+
+        /// <summary>
         /// Shows the view.
         /// </summary>
         /// <param name="startDocked">

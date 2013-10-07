@@ -128,6 +128,8 @@ namespace DocumentForms
             get { return _originalInTaskbar; }
         }
 
+        public virtual bool AllowClosing { get; protected set; }
+
         public void Show(bool startDocked, IDocumentView currentView)
         {
             //This form will be docked if startDocked is true or either currentView is null or currentView exists and is docked.
@@ -137,6 +139,13 @@ namespace DocumentForms
                 DockView();
             else
                 Show();
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+
+            AllowClosing = !e.Cancel; 
         }
 
         private void DockView()

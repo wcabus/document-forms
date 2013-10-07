@@ -155,10 +155,15 @@ namespace DocumentForms
             button.Dispose();
         }
 
+        internal IDocumentHeaderButton GetActiveButton()
+        {
+            return _documentButtons.FirstOrDefault(b => b.IsActive);
+        }
+
         internal void SetActiveButton(IDocumentHeaderButton button)
         {
             //deactivate all other buttons
-            var otherButton = _documentButtons.FirstOrDefault(b => b.IsActive);
+            var otherButton = GetActiveButton();
             if (otherButton == button && otherButton != null)
                 return;
 
@@ -269,6 +274,12 @@ namespace DocumentForms
 
             local.FormClosed -= WhenFormClosed;
             local.Close();
+            if (!(local as IDocumentView).AllowClosing)
+            {
+                local.FormClosed += WhenFormClosed;
+                return;    
+            }
+
             DocumentViewHelper.Undock(ActiveView);
 
             local.Dispose();
@@ -367,17 +378,6 @@ namespace DocumentForms
         private void WhenCloseAllButThisClicked(object sender, EventArgs e)
         {
             CloseAllDocumentsWhere(b => !b.IsActive);
-            SuspendLayout();
-            try
-            {
-                //Reposition the panel and the remaining button.
-                _documentButtons.First().Location = Point.Empty;
-                DocumentButtonPanel.Location = Point.Empty;
-            }
-            finally
-            {
-                ResumeLayout(true);
-            }
         }
 
         private void WhenCloseAllClicked(object sender, EventArgs e)
@@ -390,25 +390,35 @@ namespace DocumentForms
             SuspendLayout();
             try
             {
+                var buttonsToRemove = new List<IDocumentHeaderButton>();
                 foreach (var button in _documentButtons.Where(b => whereClause(b)))
                 {
                     button.OwnedForm.FormClosed -= WhenFormClosed;
                     button.OwnedForm.Close();
-                    button.OwnedForm.Dispose();
+                    if ((button.OwnedForm as IDocumentView).AllowClosing)
+                    {
+                        button.OwnedForm.Dispose();
 
-                    viewMenuStrip.Items.Remove(button.ToolStripMenuItem);
-                    button.ParentDocumentPanel = null;
-                    button.SetViewNull();
+                        viewMenuStrip.Items.Remove(button.ToolStripMenuItem);
+                        button.ParentDocumentPanel = null;
+                        button.SetViewNull();
 
-                    button.ToolStripMenuItem.Dispose();
-                    button.Dispose();
+                        button.ToolStripMenuItem.Dispose();
+                        button.Dispose();
+
+                        buttonsToRemove.Add(button);
+                    }
                 }
-                _documentButtons.RemoveAll(whereClause);
+
+                foreach (var button in buttonsToRemove)
+                    _documentButtons.Remove(button);
             }
             finally
             {
                 ResumeLayout(true);
             }
+
+            RepositionHeaderAndButtons();
         }
 
         private void OpenViewMenu(object sender, EventArgs e)
@@ -416,6 +426,32 @@ namespace DocumentForms
             Point position = btnShowViews.Location;
             position.Offset(0, btnShowViews.Height);
             viewMenuStrip.Show(btnShowViews, position);
+        }
+
+        private void RepositionHeaderAndButtons()
+        {
+            SuspendLayout();
+            try
+            {
+                // Reposition the remaining buttons. There could be more than one if there are windows that couldn't be closed.
+                var position = Point.Empty;
+                foreach (var button in _documentButtons)
+                {
+                    button.Location = position;
+                    position.Offset(button.Width, 0); //Increase the position for the next button.
+                }
+                // Reset the position of the panel to the starting point
+                DocumentButtonPanel.Location = Point.Empty;
+
+                RecalculateHeaderWidth();
+            }
+            finally
+            {
+                ResumeLayout(true);
+            }
+
+            if (GetActiveButton() == null)
+                SetActiveButton(_documentButtons.First());
         }
     }
 }

@@ -75,6 +75,7 @@
             this.Controls.Add(this.label1);
             this.Name = "ChildForm";
             this.Text = "ChildForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WhenClosing);
             this.ResumeLayout(false);
 
         }

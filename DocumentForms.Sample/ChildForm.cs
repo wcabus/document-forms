@@ -31,5 +31,14 @@ namespace DocumentForms.Sample
             cf2.Show(false, this);
         }
 
+        private void WhenClosing(object sender, FormClosingEventArgs e)
+        {
+            if (DialogResult.No ==
+                MessageBox.Show("Do you want to close this window?", "Close Window", MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Exclamation))
+            {
+                e.Cancel = true;    
+            }
+        }
     }
 }

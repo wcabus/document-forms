@@ -185,10 +185,18 @@ namespace DocumentForms
         private void WhenCloseClicked(object sender, EventArgs e)
         {
             var local = DocumentView;
-            local.Visible = false;  //hides the form already, before Undock would pop it up.
-            DocumentViewHelper.Undock(DocumentView); //sets DocumentView to null
 
-            local.Close();
+            // Try to close the window. If this window contains code that would prevent it from closing, 
+            // then AllowClosing should be set to false.
+            local.Close(); 
+            if (!local.AllowClosing)
+                return;
+
+            local.Visible = false;  //Make sure that the window is hidden, before Undock would pop it up.
+            DocumentViewHelper.Undock(local); //sets DocumentView to null 
+            // (Note that the DocumentView property already is null if the window was closed, 
+            // because we listen to the FormClosed event handler).
+            
             local.Dispose();
         }
 
