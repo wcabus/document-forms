@@ -17,7 +17,6 @@ namespace DocumentForms
         private readonly List<IDocumentView> _registeredViews = new List<IDocumentView>();
 
         private DocumentPanelRenderer _renderer;
-
         private IDocumentHeaderButton _previousDocument = null;
 
         /// <summary>
@@ -32,11 +31,23 @@ namespace DocumentForms
             btnCloseActiveView.ParentPanel = this;
             btnShowViews.ParentPanel = this;
 
+            AllowCloseUsingMiddleMouse = true;
+            
             Renderer = new DocumentPanelDefaultRenderer();
 
             btnScrollLeft.Click += (s, e) => ScrollToButton(-1);
             btnScrollRight.Click += (s, e) => ScrollToButton(1);
         }
+
+        /// <summary>
+        /// Allows closing docked documents by clicking on their button using the middle mouse button.
+        /// </summary>
+        [Browsable(true), 
+        Description("Gets or sets if its allowed to close docked documents when the user clicks the header button with the middle mouse button."),
+        Category("Behavior"),
+        DefaultValue(true),
+        DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        public bool AllowCloseUsingMiddleMouse { get; set; }
 
         private int GetNextButtonPosition()
         {
@@ -94,7 +105,7 @@ namespace DocumentForms
         /// <param name="documentView"></param>
         public void UndockDocument(Form documentView)
         {
-            //Note: this method does not unregister the view: it can still be docked!.
+            //Note: this method does not unregister the view: it can still be docked!
 
             //Find the button for this view
             var button = _documentButtons.FirstOrDefault(b => b.OwnedForm == documentView);
@@ -210,7 +221,10 @@ namespace DocumentForms
         /// <summary>
         /// Gets or sets whether the close button at the top right corner is enabled or not.
         /// </summary>
-        [Category("Behavior"), Description("When enabled, a close button is available at the top right of the DocumentPanel."), DefaultValue(false)]
+        [Category("Behavior"),
+        Description("When enabled, a close button is available at the top right of the DocumentPanel."), 
+        DefaultValue(false),
+        DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public bool CloseEnabled
         {
             get { return pnlCloseActiveView.Visible; }
@@ -452,6 +466,18 @@ namespace DocumentForms
 
             if (GetActiveButton() == null)
                 SetActiveButton(_documentButtons.First());
+        }
+
+        /// <summary>
+        /// When pressing CTRL+F4, the active window should be closed.
+        /// </summary>
+        private void HandleKeyDown(object sender, KeyEventArgs e)
+        {
+            if (sender != ActiveView)
+                return;
+
+            if (e.Control && e.KeyCode == Keys.F4)
+                WhenCloseClicked(this, EventArgs.Empty); //Closes the active view
         }
     }
 }

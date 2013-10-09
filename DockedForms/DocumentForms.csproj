@@ -86,6 +86,9 @@
     <EmbeddedResource Include="DocumentPanel.resx">
       <DependentUpon>DocumentPanel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="DocumentView.resx">
+      <DependentUpon>DocumentView.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="License.txt" />

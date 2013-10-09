@@ -41,6 +41,7 @@
             // 
             // documentPanel1
             // 
+            this.documentPanel1.AllowCloseUsingMiddleMouse = false;
             this.documentPanel1.CloseEnabled = true;
             this.documentPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.documentPanel1.Location = new System.Drawing.Point(0, 25);

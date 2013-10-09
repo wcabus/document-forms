@@ -152,5 +152,17 @@ namespace DocumentForms
         {
             DocumentViewHelper.Dock(this);
         }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // DocumentView
+            // 
+            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.Name = "DocumentView";
+            this.ResumeLayout(false);
+
+        }
     }
 }

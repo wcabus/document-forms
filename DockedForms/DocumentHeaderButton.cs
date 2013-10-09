@@ -25,7 +25,7 @@ namespace DocumentForms
         /// Gets or sets the <see cref="System.Windows.Forms.Form"/> associated with this button.
         /// </summary>
         /// <remarks>
-        /// Because the <see cref="DocumentHeaderButton"/> can only be created by <see cref="DocumentPanel"/> objects,
+        /// Because the <see cref="DocumentHeaderButton{T}"/> can only be created by <see cref="DocumentPanel"/> objects,
         /// we may assume that the DocumentView also implements the <see cref="IDocumentView"/> interface.
         /// </remarks>
         public TView DocumentView
@@ -169,6 +169,9 @@ namespace DocumentForms
 
             if (e.Button == MouseButtons.Left)
                 _dragStartPos = Point.Empty;
+
+            if (e.Button == MouseButtons.Middle && ParentDocumentPanel.AllowCloseUsingMiddleMouse)
+                WhenCloseClicked(sender, e);
         }
 
         private void WhenDrag(object sender, MouseEventArgs e)

@@ -46,6 +46,8 @@
             this.btnCloseActiveView = new DocumentForms.FlatButton();
             this.btnShowViews = new DocumentForms.FlatButton();
             this.btnScrollLeft = new DocumentForms.FlatButton();
+            this.shortcutKeysMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.closeActiveWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.HeaderPanel.SuspendLayout();
             this.pnlFlowHolder.SuspendLayout();
             this.pnlScrollRight.SuspendLayout();
@@ -53,6 +55,7 @@
             this.pnlShowAllViews.SuspendLayout();
             this.ScrollLeftPanel.SuspendLayout();
             this.buttonContextMenu.SuspendLayout();
+            this.shortcutKeysMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // DocumentHolderPanel
@@ -220,10 +223,27 @@
             this.btnScrollLeft.Size = new System.Drawing.Size(15, 15);
             this.btnScrollLeft.TabIndex = 0;
             // 
+            // shortcutKeysMenu
+            // 
+            this.shortcutKeysMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.closeActiveWindowToolStripMenuItem});
+            this.shortcutKeysMenu.Name = "shortcutKeysMenu";
+            this.shortcutKeysMenu.Size = new System.Drawing.Size(233, 26);
+            // 
+            // closeActiveWindowToolStripMenuItem
+            // 
+            this.closeActiveWindowToolStripMenuItem.Name = "closeActiveWindowToolStripMenuItem";
+            this.closeActiveWindowToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F4)));
+            this.closeActiveWindowToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.closeActiveWindowToolStripMenuItem.Text = "&Close Active Window";
+            this.closeActiveWindowToolStripMenuItem.Visible = false;
+            this.closeActiveWindowToolStripMenuItem.Click += new System.EventHandler(this.WhenCloseClicked);
+            // 
             // DocumentPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ContextMenuStrip = this.shortcutKeysMenu;
             this.Controls.Add(this.DocumentHolderPanel);
             this.Controls.Add(this.HeaderPanel);
             this.Name = "DocumentPanel";
@@ -235,6 +255,7 @@
             this.pnlShowAllViews.ResumeLayout(false);
             this.ScrollLeftPanel.ResumeLayout(false);
             this.buttonContextMenu.ResumeLayout(false);
+            this.shortcutKeysMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -258,5 +279,7 @@
         private System.Windows.Forms.ToolStripMenuItem btnCloseAllDocs;
         private System.Windows.Forms.ToolStripMenuItem btnCloseAllButActive;
         private System.Windows.Forms.ContextMenuStrip viewMenuStrip;
+        private System.Windows.Forms.ContextMenuStrip shortcutKeysMenu;
+        private System.Windows.Forms.ToolStripMenuItem closeActiveWindowToolStripMenuItem;
     }
 }
