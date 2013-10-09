@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>0.5.0-beta</version>
+    <version>0.5.1-beta</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
@@ -11,7 +11,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-      - Bugfix: When closing a form that prevents it from closing in a Closing or FormClosing event handler, the form would still end up being closed anyway.
+      - Bugfix: Pressing CTRL+F4 only closed the active document if the context menu on the button was being displayed.
+      - Users can now close documents by clicking the header button with the middle mouse button. This behavior can be toggled on and off
+      using the AllowCloseUsingMiddleMouse property on the DocumentPanel class.
     </releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>WinForms</tags>
