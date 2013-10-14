@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>0.5.2-beta</version>
+    <version>0.5.3-beta</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
@@ -11,9 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-      - Bugfix: Pressing CTRL+F4 only closed the active document if the context menu on the button was being displayed.
-      - Users can now close documents by clicking the header button with the middle mouse button. This behavior can be toggled on and off
-      using the AllowCloseUsingMiddleMouse property on the DocumentPanel class.
+      - You can now set DocumentPanel.ActiveView to activate the given IDocumentView. This will act just like clicking the header button.
     </releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>WinForms</tags>

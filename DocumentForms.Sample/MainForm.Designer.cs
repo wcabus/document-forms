@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             DocumentForms.DocumentPanelDefaultRenderer documentPanelDefaultRenderer1 = new DocumentForms.DocumentPanelDefaultRenderer();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.documentPanel1 = new DocumentForms.DocumentPanel();
@@ -36,6 +37,7 @@
             this.child1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.child2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.btnActivateFirst = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -55,7 +57,8 @@
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1,
-            this.toolStripButton2});
+            this.toolStripButton2,
+            this.btnActivateFirst});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(557, 25);
@@ -98,6 +101,16 @@
             this.toolStripButton2.Text = "Undock current child";
             this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
             // 
+            // btnActivateFirst
+            // 
+            this.btnActivateFirst.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnActivateFirst.Image = ((System.Drawing.Image)(resources.GetObject("btnActivateFirst.Image")));
+            this.btnActivateFirst.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnActivateFirst.Name = "btnActivateFirst";
+            this.btnActivateFirst.Size = new System.Drawing.Size(122, 22);
+            this.btnActivateFirst.Text = "Activate first window";
+            this.btnActivateFirst.Click += new System.EventHandler(this.btnActivateFirst_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -122,6 +135,7 @@
         private System.Windows.Forms.ToolStripMenuItem child1ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem child2ToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.ToolStripButton btnActivateFirst;
     }
 }
 

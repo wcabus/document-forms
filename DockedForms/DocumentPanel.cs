@@ -253,16 +253,33 @@ namespace DocumentForms
         }
 
         /// <summary>
-        /// Returns the currently active <see cref="IDocumentView"/>.
+        /// Gets or sets the currently active <see cref="IDocumentView"/>.
         /// </summary>
         public IDocumentView ActiveView
         {
             get
             {
-                if (!_documentButtons.Any())
-                    return null;
+                var button = GetActiveButton();
+                return button == null ? null : button.OwnedView;
+            }
+            set
+            {
+                // Can't set null as the active view.
+                if (value == null)
+                    throw new ArgumentNullException("value");
 
-                return _documentButtons.First(b => b.IsActive).OwnedView;
+                if (value == ActiveView)
+                    return; //Do not act if we're setting the same view.
+
+                // Can't set an undocked view as the active view.
+                if (!value.IsDocked)
+                    throw new InvalidOperationException("Unable to set the view as the active view, because IsDocked returned false.");
+
+                var button = _documentButtons.FirstOrDefault(b => b.OwnedForm == value);
+                if (button == null)
+                    throw new NotSupportedException("Unable to set the view as the active view, because it doesn't seem to be registered with this DocumentPanel.");
+
+                SetActiveButton(button);
             }
         }
 

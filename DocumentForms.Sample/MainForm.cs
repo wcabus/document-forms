@@ -13,15 +13,16 @@ namespace DocumentForms.Sample
     public partial class MainForm : Form
     {
         private static MainForm _instance;
- 
+        private ChildForm _firstForm;
+
         public MainForm()
         {
             InitializeComponent();
             _instance = this;
 
-            ChildForm cf = new ChildForm();
-            DocumentViewHelper.RegisterView(documentPanel1, cf);
-            DocumentViewHelper.Dock(cf);
+            _firstForm = new ChildForm();
+            DocumentViewHelper.RegisterView(documentPanel1, _firstForm);
+            DocumentViewHelper.Dock(_firstForm);
 
             int i = 0;
             while (i++ < 50)
@@ -52,6 +53,18 @@ namespace DocumentForms.Sample
         {
             if (documentPanel1.ActiveView != null)
                 DocumentViewHelper.Undock(documentPanel1.ActiveView);
+        }
+
+        private void btnActivateFirst_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                documentPanel1.ActiveView = _firstForm;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
