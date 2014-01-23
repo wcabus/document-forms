@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>0.5.3-beta</version>
+    <version>1.0.0</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
@@ -11,9 +11,10 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>
-      - You can now set DocumentPanel.ActiveView to activate the given IDocumentView. This will act just like clicking the header button.
+- First public release
+- Assembly is now strong-named
     </releaseNotes>
-    <copyright>Copyright 2013</copyright>
-    <tags>WinForms</tags>
+    <copyright>Copyright 2013-2014</copyright>
+    <tags>winforms forms document tabs</tags>
   </metadata>
 </package>

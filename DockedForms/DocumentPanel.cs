@@ -139,7 +139,7 @@ namespace DocumentForms
         {
             //Note: this method does not unregister the view: it can still be docked!
 
-            //Remove the button to the button panel
+            //Remove the button from the button panel
             _documentButtons.Remove(button);
             viewMenuStrip.Items.Remove(button.ToolStripMenuItem);
             DocumentButtonPanel.Controls.Remove(button as Control);
@@ -435,7 +435,7 @@ namespace DocumentForms
                         button.SetViewNull();
 
                         button.ToolStripMenuItem.Dispose();
-                        button.Dispose();
+                    button.Dispose();
 
                         buttonsToRemove.Add(button);
                     }
